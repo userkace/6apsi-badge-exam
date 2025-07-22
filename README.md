@@ -1,6 +1,78 @@
-# Getting Started with Create React App
+# 6APSI Badge Exam - React Dashboard Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern, responsive dashboard application built with React, Material-UI, and React Router. This application includes authentication, a landing page, and a protected dashboard with reporting functionality.
+
+## Features
+
+- **Authentication**: Secure login/logout functionality
+- **Responsive Design**: Works on desktop and mobile devices
+- **Dashboard**: Main interface with sidebar navigation
+- **Reporting**: View and filter records in a data table
+- **CRUD Operations**: Create, Read, Update, and Delete records
+- **Protected Routes**: Secure access to authenticated content
+
+## Tech Stack
+
+- React 18
+- Material-UI v5
+- React Router v6
+- React Hooks
+- Local Storage (for demo purposes)
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v14 or later)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/6apsi-badge-exam.git
+   cd 6apsi-badge-exam
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn
+   ```
+
+3. Start the development server:
+   ```bash
+   npm start
+   # or
+   yarn start
+   ```
+
+4. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
+## Project Structure
+
+```
+src/
+├── auth/               # Authentication components
+├── components/         # Reusable UI components
+├── context/            # React context providers
+├── pages/              # Main page components
+│   ├── Dashboard.js    # Main dashboard layout
+│   ├── Landing.js      # Public landing page
+│   └── Reporting.js    # Reports page
+├── App.js              # Main application component
+└── index.js            # Application entry point
+```
+
+## Available Scripts
+
+In the project directory, you can run:
+
+- `npm start` - Runs the app in development mode
+- `npm test` - Launches the test runner
+- `npm run build` - Builds the app for production
+- `npm run eject` - Ejects from Create React App (use with caution)
 
 ## Available Scripts
 
