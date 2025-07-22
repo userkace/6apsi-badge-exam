@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { AnimatePresence } from 'framer-motion';
+import { RecordsProvider } from './context/RecordsContext';
 
 // Import components
 import Landing from './pages/Landing';
@@ -119,9 +120,11 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router>
-        <AnimatedRoutes />
-      </Router>
+      <RecordsProvider>
+        <Router>
+          <AnimatedRoutes />
+        </Router>
+      </RecordsProvider>
     </ThemeProvider>
   );
 }

@@ -67,21 +67,21 @@ const About = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <Container 
-      maxWidth={false} 
-      sx={{ 
-        py: 4, 
-        display: 'flex', 
-        flexDirection: 'column', 
+    <Container
+      maxWidth={false}
+      sx={{
+        py: 4,
+        display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
         px: { xs: 2, sm: 3, md: 4 }
       }}
     >
       <StyledPaper elevation={3}>
         <Box textAlign="center" mb={6} width="100%">
-          <Typography 
-            variant={isMobile ? 'h3' : 'h2'} 
-            component="h1" 
+          <Typography
+            variant={isMobile ? 'h3' : 'h2'}
+            component="h1"
             gutterBottom
             sx={{
               fontWeight: 700,
@@ -91,9 +91,9 @@ const About = () => {
           >
             About Our Project
           </Typography>
-          <Typography 
-            variant={isMobile ? 'h6' : 'h5'} 
-            color="textSecondary" 
+          <Typography
+            variant={isMobile ? 'h6' : 'h5'}
+            color="textSecondary"
             paragraph
             sx={{
               maxWidth: '800px',
@@ -156,10 +156,10 @@ const About = () => {
 
         <Box mt={8} mb={6} width="100%" display="flex" flexDirection="column" alignItems="center">
           <Box maxWidth="800px" width="100%">
-            <Typography 
-              variant={isMobile ? 'h4' : 'h3'} 
-              component="h2" 
-              textAlign="center" 
+            <Typography
+              variant={isMobile ? 'h4' : 'h3'}
+              component="h2"
+              textAlign="center"
               gutterBottom
               sx={{
                 fontWeight: 700,

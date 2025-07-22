@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useRecords } from '../context/RecordsContext';
 import {
   Box,
   Button,
@@ -21,9 +22,10 @@ const statuses = ['Active', 'Pending', 'Completed', 'Cancelled', 'On Hold'];
 
 const AddRecord = ({ editMode: editModeProp = false }) => {
   const { id } = useParams();
+  const { records, addRecord: addRecordContext, updateRecord: updateRecordContext } = useRecords();
   const editMode = editModeProp || Boolean(id);
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(editMode);
   const [formData, setFormData] = useState({
     name: '',
     category: '',
@@ -31,8 +33,6 @@ const AddRecord = ({ editMode: editModeProp = false }) => {
     value: '',
     description: '',
   });
-
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,50 +44,47 @@ const AddRecord = ({ editMode: editModeProp = false }) => {
 
   // Load record data if in edit mode
   useEffect(() => {
-    if (!editMode || !id) return;
+    if (!editMode) return;
 
-    const fetchRecord = async () => {
-      setIsLoading(true);
-      try {
-        await new Promise(resolve => setTimeout(resolve, 300));
+    setIsLoading(true);
+    const recordToEdit = records.find(record => record.id === Number(id));
 
-        // In a real app, this would be an API call to fetch the record
-        // For demo purposes, we'll generate a mock record based on the ID
-        const recordId = Number(id);
+    if (recordToEdit) {
+      setFormData(recordToEdit);
+    } else {
+      console.error('Record not found');
+      alert('Record not found. Redirecting to dashboard.');
+      navigate('/dashboard');
+    }
+    setIsLoading(false);
+  }, [id, editMode, navigate, records]);
 
-        // Generate a consistent mock record based on the ID
-        const mockRecord = {
-          id: recordId,
-          name: `Record ${recordId}`,
-          category: categories[recordId % categories.length],
-          status: statuses[recordId % statuses.length],
-          value: (1000 + (recordId * 123.45) % 9000).toFixed(2), // Generate a consistent value based on ID
-          description: `This is a sample description for record ${recordId}.`,
-        };
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-        setFormData(mockRecord);
-      } catch (error) {
-        console.error('Error fetching record:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchRecord();
-  }, [id, editMode]);
-
-  // In a real app, we would fetch records from an API or context here
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // In a real app, this would be an API call to save the record
-    console.log('Form submitted:', formData);
+    setIsSubmitting(true);
 
-    // Show success message
-    alert(editMode ? 'Record updated successfully!' : 'Record added successfully!');
+    try {
+      if (editMode && id) {
+        // Update existing record
+        updateRecordContext(Number(id), formData);
+      } else {
+        // Add new record
+        addRecordContext(formData);
+      }
 
-    // Redirect to dashboard
-    navigate('/dashboard');
+      // Show success message
+      alert(editMode ? 'Record updated successfully!' : 'Record added successfully!');
+
+      // Redirect to dashboard
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Error saving record:', error);
+      alert('An error occurred while saving the record. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (isLoading) {
@@ -249,18 +246,14 @@ const AddRecord = ({ editMode: editModeProp = false }) => {
                 type="submit"
                 variant="contained"
                 color="primary"
-                startIcon={<SaveIcon />}
-                size="large"
-                sx={{
-                  px: 4,
-                  py: 1,
-                  borderRadius: 1,
-                  textTransform: 'none',
-                  fontSize: '1rem',
-                  fontWeight: 500,
-                }}
+                startIcon={isSubmitting ? <CircularProgress size={24} color="inherit" /> : <SaveIcon />}
+                fullWidth
+                disabled={isSubmitting}
+                sx={{ mt: 3, py: 1.5, borderRadius: 1 }}
               >
-                {editMode ? 'Update Record' : 'Save Record'}
+                {editMode ?
+                  (isSubmitting ? 'Updating...' : 'Update Record') :
+                  (isSubmitting ? 'Saving...' : 'Save Record')}
               </Button>
             </Grid>
           </Grid>

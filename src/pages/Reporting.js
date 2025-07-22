@@ -1,83 +1,96 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
-  Box, CircularProgress, IconButton, Paper, Table, TableBody, TableCell,
-  TableContainer, TableHead, TablePagination, TableRow, TextField, Typography,
-  Tooltip, Button, TableSortLabel
+  Box,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TableSortLabel,
+  TablePagination,
+  TextField,
+  Typography,
+  Chip,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Button
 } from '@mui/material';
-import { Search as SearchIcon, Refresh as RefreshIcon, ErrorOutline as ErrorIcon } from '@mui/icons-material';
+import {
+  Search as SearchIcon,
+  Refresh as RefreshIcon
+} from '@mui/icons-material';
+import { useRecords } from '../context/RecordsContext';
 
 // Constants
-const STATUS_OPTIONS = ['Active', 'Pending', 'Completed', 'Cancelled'];
-const CATEGORY_OPTIONS = ['Category A', 'Category B', 'Category C'];
+const STATUS_OPTIONS = ['Active', 'Pending', 'Completed', 'Cancelled', 'On Hold'];
 
-// Generate mock data
-const generateMockData = (count = 50) => {
-  return Array.from({ length: count }, (_, i) => ({
-    id: i + 1,
-    name: `Record ${i + 1}`,
-    category: CATEGORY_OPTIONS[Math.floor(Math.random() * CATEGORY_OPTIONS.length)],
-    status: STATUS_OPTIONS[Math.floor(Math.random() * STATUS_OPTIONS.length)],
-    date: new Date(Date.now() - Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-    value: parseFloat((Math.random() * 10000).toFixed(2)),
-  }));
+const statusColors = {
+  Active: 'success',
+  Pending: 'warning',
+  Completed: 'primary',
+  Cancelled: 'error',
+  'On Hold': 'info',
 };
 
 const Reporting = () => {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { records } = useRecords();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filter, setFilter] = useState('all');
-  const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'asc' });
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [sortConfig, setSortConfig] = useState({ key: 'createdAt', direction: 'desc' });
 
-  // Fetch data
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 500));
-        setData(generateMockData(50));
-      } catch (err) {
-        console.error('Error:', err);
-        setError('Failed to load data');
-      } finally {
-        setLoading(false);
+  // Get unique categories from records
+  const categories = useMemo(() => {
+    const uniqueCategories = new Set();
+    records.forEach(record => {
+      if (record.category) {
+        uniqueCategories.add(record.category);
       }
-    };
-
-    fetchData();
-  }, []);
+    });
+    return Array.from(uniqueCategories);
+  }, [records]);
 
   // Process and filter data
   const processedData = useMemo(() => {
-    let result = [...data];
+    let result = [...records];
 
     // Apply search
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       result = result.filter(item =>
-        item.name.toLowerCase().includes(term) ||
-        item.category.toLowerCase().includes(term) ||
-        item.status.toLowerCase().includes(term)
+        (item.name && item.name.toLowerCase().includes(term)) ||
+        (item.category && item.category.toLowerCase().includes(term)) ||
+        (item.status && item.status.toLowerCase().includes(term)) ||
+        (item.description && item.description.toLowerCase().includes(term))
       );
     }
 
-    // Apply filter
-    if (filter !== 'all') {
-      result = result.filter(item => item.status === filter);
+    // Apply status filter
+    if (statusFilter !== 'all') {
+      result = result.filter(item => item.status === statusFilter);
+    }
+
+    // Apply category filter
+    if (categoryFilter !== 'all') {
+      result = result.filter(item => item.category === categoryFilter);
     }
 
     // Apply sorting
     if (sortConfig.key) {
       result.sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
+        const aValue = a[sortConfig.key] || '';
+        const bValue = b[sortConfig.key] || '';
+
+        if (aValue < bValue) {
           return sortConfig.direction === 'asc' ? -1 : 1;
         }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
+        if (aValue > bValue) {
           return sortConfig.direction === 'asc' ? 1 : -1;
         }
         return 0;
@@ -85,7 +98,7 @@ const Reporting = () => {
     }
 
     return result;
-  }, [data, searchTerm, filter, sortConfig]);
+  }, [records, searchTerm, statusFilter, categoryFilter, sortConfig]);
 
   // Handle sort request
   const handleSort = (key) => {
@@ -106,52 +119,13 @@ const Reporting = () => {
     setPage(0);
   };
 
-  // Handle search input
-  const handleSearch = (event) => {
-    setSearchTerm(event.target.value);
-    setPage(0);
-  };
-
-  // Handle filter change
-  const handleFilterChange = (event) => {
-    setFilter(event.target.value);
-    setPage(0);
-  };
-
   // Handle refresh
   const handleRefresh = () => {
-    setPage(0);
     setSearchTerm('');
-    setFilter('all');
-    setSortConfig({ key: 'id', direction: 'asc' });
+    setStatusFilter('all');
+    setCategoryFilter('all');
+    setSortConfig({ key: 'createdAt', direction: 'desc' });
   };
-
-  // Loading state
-  if (loading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="300px">
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  // Error state
-  if (error) {
-    return (
-      <Box p={3} textAlign="center">
-        <ErrorIcon color="error" style={{ fontSize: 48, marginBottom: 16 }} />
-        <Typography variant="h6" gutterBottom>
-          Error Loading Data
-        </Typography>
-        <Typography color="textSecondary" paragraph>
-          {error}
-        </Typography>
-        <Button variant="contained" color="primary" onClick={handleRefresh}>
-          Retry
-        </Button>
-      </Box>
-    );
-  }
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -160,38 +134,51 @@ const Reporting = () => {
           Records Report
         </Typography>
 
-        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+        <Box display="flex" gap={2} mb={2} flexWrap="wrap">
           <TextField
             size="small"
             placeholder="Search records..."
             value={searchTerm}
-            onChange={handleSearch}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            sx={{ minWidth: 200, flexGrow: 1 }}
             InputProps={{
-              startAdornment: <SearchIcon sx={{ color: 'action.active', mr: 1 }} />,
+              startAdornment: <SearchIcon color="action" sx={{ mr: 1 }} />,
             }}
           />
-
-          <TextField
-            select
-            size="small"
-            value={filter}
-            onChange={handleFilterChange}
-            SelectProps={{ native: true }}
-            sx={{ minWidth: 150 }}
+          <FormControl size="small" sx={{ minWidth: 150 }}>
+            <InputLabel>Status</InputLabel>
+            <Select
+              value={statusFilter}
+              label="Status"
+              onChange={(e) => setStatusFilter(e.target.value)}
+            >
+              <MenuItem value="all">All Statuses</MenuItem>
+              {STATUS_OPTIONS.map(status => (
+                <MenuItem key={status} value={status}>{status}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl size="small" sx={{ minWidth: 150 }}>
+            <InputLabel>Category</InputLabel>
+            <Select
+              value={categoryFilter}
+              label="Category"
+              onChange={(e) => setCategoryFilter(e.target.value)}
+            >
+              <MenuItem value="all">All Categories</MenuItem>
+              {categories.map(category => (
+                <MenuItem key={category} value={category}>{category}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <Button
+            variant="outlined"
+            startIcon={<RefreshIcon />}
+            onClick={handleRefresh}
+            sx={{ ml: 'auto' }}
           >
-            <option value="all">All Status</option>
-            {STATUS_OPTIONS.map((status) => (
-              <option key={status} value={status}>
-                {status}
-              </option>
-            ))}
-          </TextField>
-
-          <Tooltip title="Refresh data">
-            <IconButton onClick={handleRefresh}>
-              <RefreshIcon />
-            </IconButton>
-          </Tooltip>
+            Reset Filters
+          </Button>
         </Box>
       </Box>
 
@@ -209,11 +196,51 @@ const Reporting = () => {
                     ID
                   </TableSortLabel>
                 </TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Category</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Date</TableCell>
-                <TableCell align="right">Value</TableCell>
+                <TableCell>
+                  <TableSortLabel
+                    active={sortConfig.key === 'name'}
+                    direction={sortConfig.key === 'name' ? sortConfig.direction : 'asc'}
+                    onClick={() => handleSort('name')}
+                  >
+                    Name
+                  </TableSortLabel>
+                </TableCell>
+                <TableCell>
+                  <TableSortLabel
+                    active={sortConfig.key === 'category'}
+                    direction={sortConfig.key === 'category' ? sortConfig.direction : 'asc'}
+                    onClick={() => handleSort('category')}
+                  >
+                    Category
+                  </TableSortLabel>
+                </TableCell>
+                <TableCell>
+                  <TableSortLabel
+                    active={sortConfig.key === 'status'}
+                    direction={sortConfig.key === 'status' ? sortConfig.direction : 'asc'}
+                    onClick={() => handleSort('status')}
+                  >
+                    Status
+                  </TableSortLabel>
+                </TableCell>
+                <TableCell>
+                  <TableSortLabel
+                    active={sortConfig.key === 'createdAt'}
+                    direction={sortConfig.key === 'createdAt' ? sortConfig.direction : 'desc'}
+                    onClick={() => handleSort('createdAt')}
+                  >
+                    Date Added
+                  </TableSortLabel>
+                </TableCell>
+                <TableCell align="right">
+                  <TableSortLabel
+                    active={sortConfig.key === 'value'}
+                    direction={sortConfig.key === 'value' ? sortConfig.direction : 'asc'}
+                    onClick={() => handleSort('value')}
+                  >
+                    Value
+                  </TableSortLabel>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -226,27 +253,18 @@ const Reporting = () => {
                       <TableCell>{row.name}</TableCell>
                       <TableCell>{row.category}</TableCell>
                       <TableCell>
-                        <Box
-                          sx={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            px: 1.5,
-                            py: 0.5,
-                            borderRadius: 1,
-                            bgcolor:
-                              row.status === 'Active' ? 'success.light' :
-                              row.status === 'Pending' ? 'warning.light' :
-                              row.status === 'Completed' ? 'info.light' : 'error.light',
-                            color: 'common.white',
-                            fontSize: '0.75rem',
-                            fontWeight: 500,
-                          }}
-                        >
-                          {row.status}
-                        </Box>
+                        <Chip
+                          label={row.status || 'N/A'}
+                          color={statusColors[row.status] || 'default'}
+                          size="small"
+                        />
                       </TableCell>
-                      <TableCell>{row.date}</TableCell>
-                      <TableCell align="right">${row.value.toFixed(2)}</TableCell>
+                      <TableCell>
+                        {row.createdAt ? new Date(row.createdAt).toLocaleDateString() : 'N/A'}
+                      </TableCell>
+                      <TableCell align="right">
+                        {typeof row.value === 'number' ? `$${row.value.toFixed(2)}` : row.value || 'N/A'}
+                      </TableCell>
                     </TableRow>
                   ))
               ) : (
