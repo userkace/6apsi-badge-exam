@@ -11,6 +11,7 @@ import Reporting from './pages/Reporting';
 import DashboardHome from './components/DashboardHome';
 import AddRecord from './components/AddRecord';
 import EditRecords from './components/EditRecords';
+import About from './pages/About';
 
 // Create a theme instance
 const theme = createTheme({
@@ -53,6 +54,7 @@ function App() {
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<Landing />} />
+          <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
           
           {/* Protected routes */}

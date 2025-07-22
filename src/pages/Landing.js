@@ -9,6 +9,7 @@ import {
   Paper,
   useTheme,
   useMediaQuery,
+  Grid,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
@@ -136,6 +137,33 @@ const Landing = () => {
             </Box>
           </StyledPaper>
         </HeroContent>
+        <Box sx={{ mt: 4, mb: 2 }}>
+          <Grid container spacing={2} justifyContent="center">
+            <Grid item>
+              <Button
+                component={Link}
+                to="/about"
+                variant="outlined"
+                size="large"
+                color="primary"
+                sx={{
+                  px: 4,
+                  py: 1.5,
+                  fontSize: '1.1rem',
+                  textTransform: 'none',
+                  borderRadius: 2,
+                  borderWidth: 2,
+                  '&:hover': {
+                    borderWidth: 2,
+                    backgroundColor: 'rgba(25, 118, 210, 0.04)',
+                  },
+                }}
+              >
+                Learn More
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
       </HeroSection>
     </>
   );
