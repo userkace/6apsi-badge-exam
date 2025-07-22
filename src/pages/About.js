@@ -1,12 +1,12 @@
 import React from 'react';
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  Paper, 
-  Avatar, 
-  Grid, 
-  Card, 
+import {
+  Box,
+  Container,
+  Typography,
+  Paper,
+  Avatar,
+  Grid,
+  Card,
   CardContent,
   Divider,
   useTheme,
@@ -24,7 +24,6 @@ const teamMembers = [
 
 const About = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -93,11 +92,11 @@ const About = () => {
             Meet Our Team
           </Typography>
           <Divider sx={{ mb: 4 }} />
-          
+
           <Grid container spacing={3} justifyContent="center">
             {teamMembers.map((member, index) => (
               <Grid item xs={12} sm={6} md={4} key={index}>
-                <Card sx={{ 
+                <Card sx={{
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
@@ -110,10 +109,10 @@ const About = () => {
                     boxShadow: theme.shadows[8]
                   }
                 }}>
-                  <Avatar 
-                    sx={{ 
-                      width: 100, 
-                      height: 100, 
+                  <Avatar
+                    sx={{
+                      width: 100,
+                      height: 100,
                       mb: 2,
                       bgcolor: theme.palette.primary.main,
                       fontSize: '2.5rem'
