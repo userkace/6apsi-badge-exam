@@ -61,7 +61,7 @@ const Landing = () => {
             >
               Welcome to Our Platform
             </Typography>
-            
+
             <Typography
               variant={isMobile ? 'h6' : 'h5'}
               color="textSecondary"
@@ -74,7 +74,7 @@ const Landing = () => {
             >
               Streamline your workflow and manage your records efficiently with our powerful dashboard.
             </Typography>
-            
+
             <Box
               sx={{
                 display: 'flex',
@@ -98,7 +98,7 @@ const Landing = () => {
               >
                 Get Started
               </Button>
-              
+
               <Button
                 component={Link}
                 to="/about"
@@ -114,7 +114,7 @@ const Landing = () => {
                 Learn More
               </Button>
             </Box>
-            
+
             <Box sx={{ marginTop: theme.spacing(6) }}>
               <Typography
                 variant="body2"

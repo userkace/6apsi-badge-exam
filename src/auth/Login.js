@@ -33,7 +33,7 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
-    
+
     // Basic validation
     if (!formData.email || !formData.password) {
       setError('Please fill in all fields');
@@ -42,7 +42,7 @@ const Login = () => {
 
     // TODO: Replace with actual authentication logic
     console.log('Login attempt with:', formData);
-    
+
     // For demo purposes, redirect to dashboard on any login attempt
     // In a real app, you would validate credentials first
     localStorage.setItem('isAuthenticated', 'true');

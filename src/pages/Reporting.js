@@ -86,9 +86,9 @@ const Reporting = () => {
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.status.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
     const matchesFilter = filter === 'all' || item.status === filter;
-    
+
     return matchesSearch && matchesFilter;
   });
 
@@ -120,7 +120,7 @@ const Reporting = () => {
         <Typography variant="h5" component="h1">
           Records Report
         </Typography>
-        
+
         <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
           <TextField
             size="small"
@@ -131,7 +131,7 @@ const Reporting = () => {
               startAdornment: <SearchIcon sx={{ color: 'action.active', mr: 1 }} />,
             }}
           />
-          
+
           <TextField
             select
             size="small"
@@ -146,7 +146,7 @@ const Reporting = () => {
             <option value="Completed">Completed</option>
             <option value="Cancelled">Cancelled</option>
           </TextField>
-          
+
           <Tooltip title="Refresh data">
             <IconButton onClick={handleRefresh}>
               <RefreshIcon />
@@ -154,7 +154,7 @@ const Reporting = () => {
           </Tooltip>
         </Box>
       </Box>
-      
+
       <Paper sx={{ width: '100%', overflow: 'hidden', mb: 2 }}>
         <TableContainer sx={{ maxHeight: 'calc(100vh - 300px)' }}>
           <Table stickyHeader aria-label="reporting table">
@@ -183,7 +183,7 @@ const Reporting = () => {
                           px: 1.5,
                           py: 0.5,
                           borderRadius: 1,
-                          bgcolor: 
+                          bgcolor:
                             row.status === 'Active' ? 'success.light' :
                             row.status === 'Pending' ? 'warning.light' :
                             row.status === 'Completed' ? 'info.light' : 'error.light',
@@ -211,7 +211,7 @@ const Reporting = () => {
             </TableBody>
           </Table>
         </TableContainer>
-        
+
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
@@ -222,7 +222,7 @@ const Reporting = () => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      
+
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
         <Typography variant="caption" color="text.secondary">
           Showing {Math.min(page * rowsPerPage + 1, filteredData.length)}-{
