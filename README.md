@@ -2,6 +2,14 @@
 
 A modern, responsive dashboard application built with React, Material-UI, and React Router. This application includes authentication, a landing page, and a protected dashboard with reporting functionality.
 
+## Students
+
+- Gopez, Ralphs Louis
+- Palao, Athaliah December
+- Padilla, Kervin Clyde
+- Robles, Eunice
+- Ysais, Carlo Jose
+
 ## Features
 
 - **Authentication**: Secure login/logout functionality
@@ -49,21 +57,6 @@ A modern, responsive dashboard application built with React, Material-UI, and Re
    ```
 
 4. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-## Project Structure
-
-```
-src/
-├── auth/               # Authentication components
-├── components/         # Reusable UI components
-├── context/            # React context providers
-├── pages/              # Main page components
-│   ├── Dashboard.js    # Main dashboard layout
-│   ├── Landing.js      # Public landing page
-│   └── Reporting.js    # Reports page
-├── App.js              # Main application component
-└── index.js            # Application entry point
-```
 
 ## Available Scripts
 
