@@ -10,9 +10,49 @@ import {
   CardContent,
   Divider,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
+  styled
 } from '@mui/material';
 import { School, Group, Code } from '@mui/icons-material';
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(6, 4),
+  borderRadius: theme.shape.borderRadius * 2,
+  boxShadow: theme.shadows[10],
+  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+  margin: theme.spacing(4, 'auto'),
+  maxWidth: '1200px',
+  width: '100%',
+}));
+
+const StyledCard = styled(Card)(({ theme }) => ({
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  borderRadius: theme.shape.borderRadius * 2,
+  boxShadow: theme.shadows[5],
+  transition: 'all 0.3s ease',
+  '&:hover': {
+    transform: 'translateY(-5px)',
+    boxShadow: theme.shadows[10]
+  }
+}));
+
+const TeamCard = styled(Card)(({ theme }) => ({
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  padding: theme.spacing(3),
+  textAlign: 'center',
+  borderRadius: theme.shape.borderRadius * 2,
+  boxShadow: theme.shadows[5],
+  transition: 'all 0.3s ease',
+  '&:hover': {
+    transform: 'translateY(-5px)',
+    boxShadow: theme.shadows[10]
+  }
+}));
 
 const teamMembers = [
   { name: 'Gopez, Ralphs Louis', role: 'Developer' },
@@ -24,24 +64,51 @@ const teamMembers = [
 
 const About = () => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Paper elevation={3} sx={{ p: 4, mb: 4, borderRadius: 2 }}>
-        <Box textAlign="center" mb={4}>
-          <Typography variant="h3" component="h1" gutterBottom>
+    <Container 
+      maxWidth={false} 
+      sx={{ 
+        py: 4, 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center',
+        px: { xs: 2, sm: 3, md: 4 }
+      }}
+    >
+      <StyledPaper elevation={3}>
+        <Box textAlign="center" mb={6} width="100%">
+          <Typography 
+            variant={isMobile ? 'h3' : 'h2'} 
+            component="h1" 
+            gutterBottom
+            sx={{
+              fontWeight: 700,
+              color: theme.palette.primary.main,
+              marginBottom: theme.spacing(3),
+            }}
+          >
             About Our Project
           </Typography>
-          <Typography variant="h6" color="textSecondary" paragraph>
+          <Typography 
+            variant={isMobile ? 'h6' : 'h5'} 
+            color="textSecondary" 
+            paragraph
+            sx={{
+              maxWidth: '800px',
+              margin: '0 auto',
+            }}
+          >
             A modern, responsive dashboard application built with React, Material-UI, and React Router.
           </Typography>
         </Box>
 
-        <Grid container spacing={4} mb={4}>
+        <Grid container spacing={4} mb={6} justifyContent="center">
           <Grid item xs={12} md={4}>
-            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <StyledCard>
               <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
-                <School color="primary" sx={{ fontSize: 60 }} />
+                <School color="primary" sx={{ fontSize: 60, opacity: 0.9 }} />
               </Box>
               <CardContent sx={{ flexGrow: 1, textAlign: 'center' }}>
                 <Typography variant="h5" component="h3" gutterBottom>
@@ -51,13 +118,13 @@ const About = () => {
                   This project was developed as part of our academic curriculum to showcase our skills in modern web development.
                 </Typography>
               </CardContent>
-            </Card>
+            </StyledCard>
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <StyledCard>
               <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
-                <Group color="primary" sx={{ fontSize: 60 }} />
+                <Group color="primary" sx={{ fontSize: 60, opacity: 0.9 }} />
               </Box>
               <CardContent sx={{ flexGrow: 1, textAlign: 'center' }}>
                 <Typography variant="h5" component="h3" gutterBottom>
@@ -67,13 +134,13 @@ const About = () => {
                   A collaborative effort by a team of dedicated students working together to build a comprehensive dashboard application.
                 </Typography>
               </CardContent>
-            </Card>
+            </StyledCard>
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <StyledCard>
               <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
-                <Code color="primary" sx={{ fontSize: 60 }} />
+                <Code color="primary" sx={{ fontSize: 60, opacity: 0.9 }} />
               </Box>
               <CardContent sx={{ flexGrow: 1, textAlign: 'center' }}>
                 <Typography variant="h5" component="h3" gutterBottom>
@@ -83,61 +150,62 @@ const About = () => {
                   Built with React, Material-UI, and React Router to deliver a seamless user experience across all devices.
                 </Typography>
               </CardContent>
-            </Card>
+            </StyledCard>
           </Grid>
         </Grid>
 
-        <Box mt={6} mb={4}>
-          <Typography variant="h4" component="h2" textAlign="center" gutterBottom>
-            Meet Our Team
-          </Typography>
-          <Divider sx={{ mb: 4 }} />
+        <Box mt={8} mb={6} width="100%" display="flex" flexDirection="column" alignItems="center">
+          <Box maxWidth="800px" width="100%">
+            <Typography 
+              variant={isMobile ? 'h4' : 'h3'} 
+              component="h2" 
+              textAlign="center" 
+              gutterBottom
+              sx={{
+                fontWeight: 700,
+                color: theme.palette.primary.main,
+                marginBottom: theme.spacing(4),
+              }}
+            >
+              Meet Our Team
+            </Typography>
+            <Divider sx={{ mb: 6, mx: 'auto', width: '100px', borderBottomWidth: 3 }} />
 
-          <Grid container spacing={3} justifyContent="center">
+          <Grid container spacing={4} justifyContent="center" maxWidth="1200px" margin="0 auto">
             {teamMembers.map((member, index) => (
               <Grid item xs={12} sm={6} md={4} key={index}>
-                <Card sx={{
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  p: 3,
-                  textAlign: 'center',
-                  transition: 'transform 0.3s',
-                  '&:hover': {
-                    transform: 'translateY(-5px)',
-                    boxShadow: theme.shadows[8]
-                  }
-                }}>
+                <TeamCard>
                   <Avatar
                     sx={{
-                      width: 100,
-                      height: 100,
-                      mb: 2,
+                      width: 120,
+                      height: 120,
+                      mb: 3,
                       bgcolor: theme.palette.primary.main,
-                      fontSize: '2.5rem'
+                      fontSize: '2.5rem',
+                      boxShadow: theme.shadows[3]
                     }}
                   >
                     {member.name.split(' ').map(n => n[0]).join('')}
                   </Avatar>
-                  <Typography variant="h6" component="h3" gutterBottom>
+                  <Typography variant="h6" component="h3" gutterBottom sx={{ fontWeight: 600 }}>
                     {member.name}
                   </Typography>
-                  <Typography color="textSecondary" variant="body2">
+                  <Typography color="textSecondary" variant="body1" sx={{ fontWeight: 500 }}>
                     {member.role}
                   </Typography>
-                </Card>
+                </TeamCard>
               </Grid>
             ))}
           </Grid>
+          </Box>
         </Box>
 
-        <Box mt={6} textAlign="center">
+        <Box mt={8} textAlign="center">
           <Typography variant="body2" color="textSecondary">
-            {new Date().getFullYear()} 6APSI Badge Exam Project. All rights reserved.
+            © {new Date().getFullYear()} 6APSI Badge Exam Project. All rights reserved.
           </Typography>
         </Box>
-      </Paper>
+      </StyledPaper>
     </Container>
   );
 };
