@@ -8,6 +8,9 @@ import Landing from './pages/Landing';
 import Login from './auth/Login';
 import Dashboard from './pages/Dashboard';
 import Reporting from './pages/Reporting';
+import DashboardHome from './components/DashboardHome';
+import AddRecord from './components/AddRecord';
+import EditRecords from './components/EditRecords';
 
 // Create a theme instance
 const theme = createTheme({
@@ -61,10 +64,11 @@ function App() {
               </ProtectedRoute>
             }
           >
-            <Route index element={<div>Dashboard Home</div>} />
+            <Route index element={<DashboardHome />} />
             <Route path="reports" element={<Reporting />} />
-            <Route path="add" element={<div>Add Record Form</div>} />
-            <Route path="edit" element={<div>Edit Records</div>} />
+            <Route path="add" element={<AddRecord />} />
+            <Route path="edit" element={<EditRecords />} />
+            <Route path="edit/:id" element={<AddRecord editMode />} />
           </Route>
           
           {/* Fallback route */}

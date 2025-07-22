@@ -1,24 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import {
   Box,
+  CircularProgress,
+  IconButton,
   Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
   TablePagination,
+  TableRow,
   TextField,
   Typography,
-  CircularProgress,
-  IconButton,
   Tooltip,
-  useTheme,
 } from '@mui/material';
 import {
   Search as SearchIcon,
-  FilterList as FilterListIcon,
   Refresh as RefreshIcon,
 } from '@mui/icons-material';
 
@@ -33,7 +31,7 @@ const mockData = Array.from({ length: 50 }, (_, i) => ({
 }));
 
 const Reporting = () => {
-  const theme = useTheme();
+
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
