@@ -11,9 +11,11 @@ import {
   Divider,
   useTheme,
   useMediaQuery,
-  styled
+  styled,
+  Button 
 } from '@mui/material';
-import { School, Group, Code } from '@mui/icons-material';
+import { School, Group, Code } from '@mui/icons-material'; //buton
+import { useNavigate } from 'react-router-dom'; 
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(6, 4),
@@ -65,6 +67,7 @@ const teamMembers = [
 const About = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const navigate = useNavigate(); //for back button
 
   return (
     <Container
@@ -77,6 +80,16 @@ const About = () => {
         px: { xs: 2, sm: 3, md: 4 }
       }}
     >
+      {/* Back Button */}
+      <Box width="100%" mb={2} display="flex" justifyContent="flex-start">
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => navigate(-1)}
+        >
+          Back
+        </Button>
+      </Box>
       <StyledPaper elevation={3}>
         <Box textAlign="center" mb={6} width="100%">
           <Typography
@@ -211,3 +224,4 @@ const About = () => {
 };
 
 export default About;
+
