@@ -22,8 +22,10 @@ import {
 import {
     Search as SearchIcon,
     Refresh as RefreshIcon,
+    ArrowBack as ArrowBackIcon,
 } from '@mui/icons-material'
 import { useRecords } from '../context/RecordsContext'
+import { useNavigate } from 'react-router-dom'
 
 // Constants
 const STATUS_OPTIONS = [
@@ -43,6 +45,7 @@ const statusColors = {
 }
 
 const Reporting = () => {
+    const navigate = useNavigate()
     const { records } = useRecords()
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
@@ -142,6 +145,14 @@ const Reporting = () => {
 
     return (
         <Box sx={{ width: '100%' }}>
+          <Button
+                              startIcon={<ArrowBackIcon />}
+                              onClick={() => navigate('/dashboard')}
+                              sx={{ mb: 3 }}
+                              variant="outlined"
+                          >
+                              Back to Dashboard
+                          </Button>
             <Box
                 sx={{
                     display: 'flex',
