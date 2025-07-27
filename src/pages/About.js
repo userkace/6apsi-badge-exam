@@ -299,9 +299,7 @@ const About = () => {
                                                     width: 120,
                                                     height: 120,
                                                     mb: 3,
-                                                    bgcolor:
-                                                        theme.palette.primary
-                                                            .main,
+                                                    bgcolor: '#f0f0f0',
                                                     fontSize: '2.5rem',
                                                     boxShadow: theme.shadows[3],
                                                 }}
