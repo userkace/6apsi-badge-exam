@@ -56,22 +56,35 @@ const TeamCard = styled(Card)(({ theme }) => ({
 }))
 
 const teamMembers = [
-    { name: 'Gopez, Ralph Louis', role: 'Developer', gitHubAccount: 'sevora' },
+    {
+        name: 'Gopez, Ralph Louis',
+        role: 'Developer',
+        gitHubAccount: 'sevora',
+        gitHubAvatar: '67792878',
+    },
     {
         name: 'Robles, Eunice',
         role: 'Developer',
         gitHubAccount: 'EuniceRobles',
+        gitHubAvatar: '218378729',
     },
-    { name: 'Ysais, Carlos Jose', role: 'Developer', gitHubAccount: 'cbysais' },
+    {
+        name: 'Ysais, Carlos Jose',
+        role: 'Developer',
+        gitHubAccount: 'cbysais',
+        gitHubAvatar: '217733506',
+    },
     {
         name: 'Padilla, Kervin Clyde',
         role: 'Developer',
         gitHubAccount: 'userkace',
+        gitHubAvatar: '101122530',
     },
     {
         name: 'Palao, Maria Athaliah December',
         role: 'Developer',
         gitHubAccount: 'jupiterhal',
+        gitHubAvatar: '144607348',
     },
 ]
 
@@ -287,12 +300,8 @@ const About = () => {
                                                     fontSize: '2.5rem',
                                                     boxShadow: theme.shadows[3],
                                                 }}
-                                            >
-                                                {member.name
-                                                    .split(' ')
-                                                    .map((n) => n[0])
-                                                    .join('')}
-                                            </Avatar>
+                                                src={`https://avatars.githubusercontent.com/u/${member.gitHubAvatar}`}
+                                            />
                                             <Typography
                                                 variant="h6"
                                                 component="h3"
