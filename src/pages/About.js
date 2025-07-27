@@ -56,11 +56,11 @@ const TeamCard = styled(Card)(({ theme }) => ({
 }))
 
 const teamMembers = [
-    { name: 'Gopez, Ralphs Louis', role: 'Developer' },
-    { name: 'Palao, Athaliah December', role: 'Developer' },
+    { name: 'Gopez, Ralph Louis', role: 'Developer' },
+    { name: 'Palao, Maria Athaliah December', role: 'Developer' },
     { name: 'Padilla, Kervin Clyde', role: 'Developer' },
     { name: 'Robles, Eunice', role: 'Developer' },
-    { name: 'Ysais, Carlo Jose', role: 'Developer' },
+    { name: 'Ysais, Carlos Jose', role: 'Developer' },
 ]
 
 const About = () => {
