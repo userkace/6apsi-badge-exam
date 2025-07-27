@@ -5,10 +5,10 @@ A modern, responsive dashboard application built with React, Material-UI, and Re
 ## Students
 
 - Gopez, Ralph Louis
-- Palao, Maria Athaliah December
-- Padilla, Kervin Clyde
 - Robles, Eunice
 - Ysais, Carlos Jose
+- Padilla, Kervin Clyde
+- Palao, Maria Athaliah December
 
 ## Features
 
