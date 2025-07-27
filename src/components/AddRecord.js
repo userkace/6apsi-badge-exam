@@ -41,7 +41,7 @@ const AddRecord = ({ editMode: editModeProp = false }) => {
     const [isLoading, setIsLoading] = useState(editMode)
     const [formData, setFormData] = useState({
         name: '',
-        category: '',
+        category: 'Category A',
         status: 'Active',
         value: '',
         description: '',
@@ -194,8 +194,10 @@ const AddRecord = ({ editMode: editModeProp = false }) => {
                                     onChange={handleChange}
                                     label="Category"
                                     required
+                                    fullWidth
                                     sx={{
                                         borderRadius: 1,
+                                        width: '100%',
                                         '& .MuiSelect-select': {
                                             padding: '14px 14px',
                                         },
