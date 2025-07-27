@@ -25,8 +25,8 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
     boxShadow: theme.shadows[10],
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
     margin: theme.spacing(4, 'auto'),
-    maxWidth: '1200px',
     width: '100%',
+    overflow: 'hidden',
 }))
 
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -98,12 +98,9 @@ const About = () => {
 
     return (
         <Container
-            maxWidth={false}
+            maxWidth="lg"
             sx={{
                 py: 4,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
                 px: { xs: 2, sm: 3, md: 4 },
             }}
         >
@@ -146,106 +143,94 @@ const About = () => {
                     </Typography>
                 </Box>
 
-                <Grid container spacing={4} mb={6} justifyContent="center">
-                    <Grid item xs={12} md={4}>
-                        <StyledCard>
-                            <Box
-                                sx={{
-                                    p: 3,
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <School
-                                    color="primary"
-                                    sx={{ fontSize: 60, opacity: 0.9 }}
-                                />
+                <Box sx={{
+                    display: 'flex',
+                    flexWrap: { xs: 'wrap', md: 'nowrap' },
+                    gap: 4,
+                    justifyContent: 'center',
+                    mb: 6,
+                    width: '100%',
+                    overflowX: { xs: 'hidden', md: 'auto' },
+                    py: 2,
+                    px: { xs: 3, sm: 4, md: 8 },
+                    '&::-webkit-scrollbar': {
+                        height: '8px',
+                    },
+                    '&::-webkit-scrollbar-track': {
+                        background: '#f1f1f1',
+                        borderRadius: '4px',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                        background: '#888',
+                        borderRadius: '4px',
+                        '&:hover': {
+                            background: '#555',
+                        },
+                    },
+                }}>
+                    {/* First Card */}
+                    <Box sx={{ 
+                        flex: { xs: '1 1 100%', md: '0 0 300px' },
+                        minWidth: { xs: '100%', md: '300px' },
+                        maxWidth: { xs: '100%', md: '300px' }
+                    }}>
+                        <StyledCard sx={{ height: '100%' }}>
+                            <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
+                                <School color="primary" sx={{ fontSize: 60, opacity: 0.9 }} />
                             </Box>
-                            <CardContent
-                                sx={{ flexGrow: 1, textAlign: 'center' }}
-                            >
-                                <Typography
-                                    variant="h5"
-                                    component="h3"
-                                    gutterBottom
-                                >
+                            <CardContent sx={{ flexGrow: 1, textAlign: 'center' }}>
+                                <Typography variant="h5" component="h3" gutterBottom>
                                     Educational Purpose
                                 </Typography>
                                 <Typography color="textSecondary">
-                                    This project was developed as part of our
-                                    academic curriculum to showcase our skills
-                                    in modern web development.
+                                    This project was developed as part of our academic curriculum to showcase our skills in modern web development.
                                 </Typography>
                             </CardContent>
                         </StyledCard>
-                    </Grid>
+                    </Box>
 
-                    <Grid item xs={12} md={4}>
-                        <StyledCard>
-                            <Box
-                                sx={{
-                                    p: 3,
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <Group
-                                    color="primary"
-                                    sx={{ fontSize: 60, opacity: 0.9 }}
-                                />
+                    {/* Second Card */}
+                    <Box sx={{ 
+                        flex: { xs: '1 1 100%', md: '0 0 300px' },
+                        minWidth: { xs: '100%', md: '300px' },
+                        maxWidth: { xs: '100%', md: '300px' }
+                    }}>
+                        <StyledCard sx={{ height: '100%' }}>
+                            <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
+                                <Group color="primary" sx={{ fontSize: 60, opacity: 0.9 }} />
                             </Box>
-                            <CardContent
-                                sx={{ flexGrow: 1, textAlign: 'center' }}
-                            >
-                                <Typography
-                                    variant="h5"
-                                    component="h3"
-                                    gutterBottom
-                                >
+                            <CardContent sx={{ flexGrow: 1, textAlign: 'center' }}>
+                                <Typography variant="h5" component="h3" gutterBottom>
                                     Team Collaboration
                                 </Typography>
                                 <Typography color="textSecondary">
-                                    A collaborative effort by a team of
-                                    dedicated students working together to build
-                                    a comprehensive dashboard application.
+                                    Developed by a team of five students, this project demonstrates our ability to work together and combine our skills.
                                 </Typography>
                             </CardContent>
                         </StyledCard>
-                    </Grid>
+                    </Box>
 
-                    <Grid item xs={12} md={4}>
-                        <StyledCard>
-                            <Box
-                                sx={{
-                                    p: 3,
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <Code
-                                    color="primary"
-                                    sx={{ fontSize: 60, opacity: 0.9 }}
-                                />
+                    {/* Third Card */}
+                    <Box sx={{ 
+                        flex: { xs: '1 1 100%', md: '0 0 300px' },
+                        minWidth: { xs: '100%', md: '300px' },
+                        maxWidth: { xs: '100%', md: '300px' }
+                    }}>
+                        <StyledCard sx={{ height: '100%' }}>
+                            <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
+                                <Code color="primary" sx={{ fontSize: 60, opacity: 0.9 }} />
                             </Box>
-                            <CardContent
-                                sx={{ flexGrow: 1, textAlign: 'center' }}
-                            >
-                                <Typography
-                                    variant="h5"
-                                    component="h3"
-                                    gutterBottom
-                                >
+                            <CardContent sx={{ flexGrow: 1, textAlign: 'center' }}>
+                                <Typography variant="h5" component="h3" gutterBottom>
                                     Modern Tech Stack
                                 </Typography>
                                 <Typography color="textSecondary">
-                                    Built with React, Material-UI, and React
-                                    Router to deliver a seamless user experience
-                                    across all devices.
+                                    Built with React, Material-UI, and other modern web technologies, showcasing our proficiency with current development tools.
                                 </Typography>
                             </CardContent>
                         </StyledCard>
-                    </Grid>
-                </Grid>
+                    </Box>
+                </Box>
 
                 <Box
                     mt={8}
