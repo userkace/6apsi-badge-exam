@@ -13,6 +13,9 @@ import {
     styled,
     Button,
 } from '@mui/material'
+import {
+  ArrowBack as ArrowBackIcon,
+} from '@mui/icons-material'
 import { School, Group, Code } from '@mui/icons-material' //buton
 import { useNavigate } from 'react-router-dom'
 
@@ -107,6 +110,7 @@ const About = () => {
             {/* Back Button */}
             <Box width="100%" mb={2} display="flex" justifyContent="flex-start">
                 <Button
+                startIcon={<ArrowBackIcon />}
                     variant="outlined"
                     color="primary"
                     onClick={() => navigate(-1)}
@@ -287,6 +291,7 @@ const About = () => {
                                         href={`https://github.com/${member.gitHubAccount}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
+                                        style={{textDecoration:'none'}}
                                     >
                                         <TeamCard>
                                             <Avatar
