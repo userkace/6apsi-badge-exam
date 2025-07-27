@@ -37,24 +37,27 @@ A modern, responsive dashboard application built with React, Material-UI, and Re
 ### Installation
 
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/6apsi-badge-exam.git
-   cd 6apsi-badge-exam
-   ```
+
+    ```bash
+    git clone https://github.com/yourusername/6apsi-badge-exam.git
+    cd 6apsi-badge-exam
+    ```
 
 2. Install dependencies:
-   ```bash
-   npm install
-   # or
-   yarn
-   ```
+
+    ```bash
+    npm install
+    # or
+    yarn
+    ```
 
 3. Start the development server:
-   ```bash
-   npm start
-   # or
-   yarn start
-   ```
+
+    ```bash
+    npm start
+    # or
+    yarn start
+    ```
 
 4. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
