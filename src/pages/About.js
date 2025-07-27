@@ -301,6 +301,7 @@ const About = () => {
                                                     boxShadow: theme.shadows[3],
                                                 }}
                                                 src={`https://avatars.githubusercontent.com/u/${member.gitHubAvatar}`}
+                                                alt={`${member.name}'s GitHub avatar`}
                                             />
                                             <Typography
                                                 variant="h6"
