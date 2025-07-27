@@ -82,30 +82,7 @@ const DashboardHome = () => {
                 Dashboard Overview
             </Typography>
 
-            <Box
-                sx={{
-                    mt: 2,
-                    mb: 4,
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                }}
-            >
-                <Button
-                    variant="outlined"
-                    color="secondary"
-                    onClick={() => {
-                        const count = generateSampleData().length
-                        setSnackbar({
-                            open: true,
-                            message: `Added ${count} sample records to your dashboard!`,
-                            severity: 'success',
-                        })
-                    }}
-                    sx={{ mb: 3 }}
-                >
-                    Load Sample Data
-                </Button>
-            </Box>
+
 
             <Grid container spacing={3} sx={{ mt: 2, mb: 4 }}>
                 <Grid item xs={12} sm={6} md={4}>
@@ -133,6 +110,30 @@ const DashboardHome = () => {
                     />
                 </Grid>
             </Grid>
+            <Box
+                sx={{
+                    mt: 2,
+                    mb: 4,
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                }}
+            >
+                <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => {
+                        const count = generateSampleData().length
+                        setSnackbar({
+                            open: true,
+                            message: `Added ${count} sample records to your dashboard!`,
+                            severity: 'success',
+                        })
+                    }}
+                    sx={{ mb: 3 }}
+                >
+                    Load Sample Data
+                </Button>
+            </Box>
 
             <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>

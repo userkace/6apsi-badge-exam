@@ -21,6 +21,7 @@ import {
     Delete as DeleteIcon,
     Search as SearchIcon,
     Refresh as RefreshIcon,
+    ArrowBack as ArrowBackIcon,
 } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import { useRecords } from '../context/RecordsContext'
@@ -106,6 +107,14 @@ const EditRecords = () => {
 
     return (
         <Box sx={{ flexGrow: 1, p: 3 }}>
+            <Button
+                            startIcon={<ArrowBackIcon />}
+                            onClick={() => navigate('/dashboard')}
+                            sx={{ mb: 3 }}
+                            variant="outlined"
+                        >
+                            Back to Dashboard
+                        </Button>
             <Paper elevation={3} sx={{ p: 3 }}>
                 <Box
                     display="flex"

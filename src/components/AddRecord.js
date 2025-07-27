@@ -126,8 +126,8 @@ const AddRecord = ({ editMode: editModeProp = false }) => {
             sx={{
                 flexGrow: 1,
                 p: { xs: 2, sm: 3 },
-                maxWidth: '1200px',
                 mx: 'auto',
+                maxWidth: '1200px',
                 width: '100%',
                 opacity: isLoading ? 0.7 : 1,
                 transition: 'opacity 0.3s ease-in-out',
@@ -275,7 +275,7 @@ const AddRecord = ({ editMode: editModeProp = false }) => {
                                 margin="normal"
                                 variant="outlined"
                                 multiline
-                                rows={3}
+                                rows={1.75}
                                 sx={{
                                     '& .MuiOutlinedInput-root': {
                                         borderRadius: 1,
