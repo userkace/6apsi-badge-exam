@@ -56,11 +56,23 @@ const TeamCard = styled(Card)(({ theme }) => ({
 }))
 
 const teamMembers = [
-    { name: 'Gopez, Ralph Louis', role: 'Developer' },
-    { name: 'Robles, Eunice', role: 'Developer' },
-    { name: 'Ysais, Carlos Jose', role: 'Developer' },
-    { name: 'Padilla, Kervin Clyde', role: 'Developer' },
-    { name: 'Palao, Maria Athaliah December', role: 'Developer' },
+    { name: 'Gopez, Ralph Louis', role: 'Developer', gitHubAccount: 'sevora' },
+    {
+        name: 'Robles, Eunice',
+        role: 'Developer',
+        gitHubAccount: 'EuniceRobles',
+    },
+    { name: 'Ysais, Carlos Jose', role: 'Developer', gitHubAccount: 'cbysais' },
+    {
+        name: 'Padilla, Kervin Clyde',
+        role: 'Developer',
+        gitHubAccount: 'userkace',
+    },
+    {
+        name: 'Palao, Maria Athaliah December',
+        role: 'Developer',
+        gitHubAccount: 'jupiterhal',
+    },
 ]
 
 const About = () => {
@@ -258,39 +270,46 @@ const About = () => {
                         >
                             {teamMembers.map((member, index) => (
                                 <Grid item xs={12} sm={6} md={4} key={index}>
-                                    <TeamCard>
-                                        <Avatar
-                                            sx={{
-                                                width: 120,
-                                                height: 120,
-                                                mb: 3,
-                                                bgcolor:
-                                                    theme.palette.primary.main,
-                                                fontSize: '2.5rem',
-                                                boxShadow: theme.shadows[3],
-                                            }}
-                                        >
-                                            {member.name
-                                                .split(' ')
-                                                .map((n) => n[0])
-                                                .join('')}
-                                        </Avatar>
-                                        <Typography
-                                            variant="h6"
-                                            component="h3"
-                                            gutterBottom
-                                            sx={{ fontWeight: 600 }}
-                                        >
-                                            {member.name}
-                                        </Typography>
-                                        <Typography
-                                            color="textSecondary"
-                                            variant="body1"
-                                            sx={{ fontWeight: 500 }}
-                                        >
-                                            {member.role}
-                                        </Typography>
-                                    </TeamCard>
+                                    <a
+                                        href={`https://github.com/${member.gitHubAccount}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <TeamCard>
+                                            <Avatar
+                                                sx={{
+                                                    width: 120,
+                                                    height: 120,
+                                                    mb: 3,
+                                                    bgcolor:
+                                                        theme.palette.primary
+                                                            .main,
+                                                    fontSize: '2.5rem',
+                                                    boxShadow: theme.shadows[3],
+                                                }}
+                                            >
+                                                {member.name
+                                                    .split(' ')
+                                                    .map((n) => n[0])
+                                                    .join('')}
+                                            </Avatar>
+                                            <Typography
+                                                variant="h6"
+                                                component="h3"
+                                                gutterBottom
+                                                sx={{ fontWeight: 600 }}
+                                            >
+                                                {member.name}
+                                            </Typography>
+                                            <Typography
+                                                color="textSecondary"
+                                                variant="body1"
+                                                sx={{ fontWeight: 500 }}
+                                            >
+                                                {member.role}
+                                            </Typography>
+                                        </TeamCard>
+                                    </a>
                                 </Grid>
                             ))}
                         </Grid>
