@@ -7,6 +7,7 @@ export const UsersProvider = ({ children }) => {
     const [users, setUsers] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
+    const [lastAction, setLastAction] = useState({ type: null, userId: null })
 
     // Fetch users from JSONPlaceholder API on component mount
     useEffect(() => {
@@ -70,18 +71,20 @@ export const UsersProvider = ({ children }) => {
     }, [users, loading])
 
     const addUser = (newUser) => {
-        // In a real app, you would post to an API first
         const userWithId = {
             ...newUser,
-            id: Math.max(0, ...users.map(user => user.id)) + 1, // Generate next ID
+            id: Math.max(0, ...users.map(user => user.id)) + 1,
             createdAt: new Date().toISOString(),
         }
-        setUsers((prevUsers) => [...prevUsers, userWithId])
+        setUsers((prevUsers) => {
+            const updatedUsers = [...prevUsers, userWithId]
+            setLastAction({ type: 'added', userId: userWithId.id })
+            return updatedUsers
+        })
         return userWithId
     }
 
     const updateUser = (id, updatedUser) => {
-        // In a real app, you would put to an API first
         setUsers((prevUsers) =>
             prevUsers.map((user) =>
                 user.id === id
@@ -93,11 +96,14 @@ export const UsersProvider = ({ children }) => {
                     : user
             )
         )
+        setLastAction({ type: 'updated', userId: id })
+        return users.find(user => user.id === id)
     }
 
     const deleteUser = (id) => {
         // In a real app, you would delete from an API first
         setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id))
+        setLastAction({ type: 'deleted', userId: id })
     }
 
     // Refresh users from API
@@ -133,6 +139,7 @@ export const UsersProvider = ({ children }) => {
 
             setUsers(allUsers)
             localStorage.setItem('users', JSON.stringify(allUsers))
+            setLastAction({ type: 'refreshed' })
         } catch (err) {
             setError('Failed to refresh users. Please try again later.')
             console.error('Error refreshing users:', err)
@@ -151,6 +158,7 @@ export const UsersProvider = ({ children }) => {
                 updateUser,
                 deleteUser,
                 refreshUsers,
+                lastAction,
             }}
         >
             {children}

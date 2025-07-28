@@ -85,11 +85,11 @@ const AddUser = ({ editMode: editModeProp = false }) => {
 
     const handleChange = (e) => {
         const { name, value } = e.target
-        
+
         // Handle nested fields
         if (name.includes('.')) {
             const [parent, child, subChild] = name.split('.')
-            
+
             if (subChild) {
                 setFormData((prev) => ({
                     ...prev,
@@ -116,7 +116,7 @@ const AddUser = ({ editMode: editModeProp = false }) => {
                 [name]: value,
             }))
         }
-        
+
         // Clear error when user starts typing in a field
         if (errors[name]) {
             setErrors((prev) => ({
@@ -128,40 +128,40 @@ const AddUser = ({ editMode: editModeProp = false }) => {
 
     const validateForm = () => {
         const newErrors = {}
-        
+
         // Basic validation
         if (!formData.name) newErrors.name = 'Name is required'
         if (!formData.username) newErrors.username = 'Username is required'
-        
+
         if (!formData.email) {
             newErrors.email = 'Email is required'
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
             newErrors.email = 'Email is invalid'
         }
-        
+
         if (!formData.company.name) newErrors['company.name'] = 'Company name is required'
-        
+
         return newErrors
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        
+
         const validationErrors = validateForm()
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors)
             return
         }
-        
+
         try {
             setLoading(true)
-            
+
             if (editMode && id) {
                 await updateUser(parseInt(id), formData)
-                navigate('/dashboard/edit')
+                navigate('/dashboard')
             } else {
                 const newUser = await addUser(formData)
-                navigate('/dashboard/edit')
+                navigate('/dashboard')
             }
         } catch (error) {
             console.error('Error saving user:', error)
@@ -191,23 +191,23 @@ const AddUser = ({ editMode: editModeProp = false }) => {
             >
                 Back to Users List
             </Button>
-            
+
             <Paper elevation={3} sx={{ p: 4 }}>
                 <Typography variant="h5" component="h1" sx={{ mb: 4 }}>
                     {editMode ? 'Edit User' : 'Add New User'}
                 </Typography>
-                
+
                 {errors.submit && (
                     <Alert severity="error" sx={{ mb: 3 }}>
                         {errors.submit}
                     </Alert>
                 )}
-                
+
                 <Box component="form" onSubmit={handleSubmit}>
                     <Typography variant="h6" sx={{ mb: 2 }}>
                         Basic Information
                     </Typography>
-                    
+
                     <Grid container spacing={3}>
                         <Grid item xs={12} sm={6}>
                             <TextField
@@ -266,13 +266,13 @@ const AddUser = ({ editMode: editModeProp = false }) => {
                             />
                         </Grid>
                     </Grid>
-                    
+
                     <Divider sx={{ my: 4 }} />
-                    
+
                     <Typography variant="h6" sx={{ mb: 2 }}>
                         Company Information
                     </Typography>
-                    
+
                     <Grid container spacing={3}>
                         <Grid item xs={12} sm={6}>
                             <TextField
@@ -305,13 +305,13 @@ const AddUser = ({ editMode: editModeProp = false }) => {
                             />
                         </Grid>
                     </Grid>
-                    
+
                     <Divider sx={{ my: 4 }} />
-                    
+
                     <Typography variant="h6" sx={{ mb: 2 }}>
                         Address Information
                     </Typography>
-                    
+
                     <Grid container spacing={3}>
                         <Grid item xs={12} sm={6}>
                             <TextField
@@ -350,7 +350,7 @@ const AddUser = ({ editMode: editModeProp = false }) => {
                             />
                         </Grid>
                     </Grid>
-                    
+
                     <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
                         <Button
                             type="submit"

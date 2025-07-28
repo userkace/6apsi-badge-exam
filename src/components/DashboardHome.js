@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     Box,
     Typography,
@@ -101,23 +101,53 @@ const ActionCard = ({ title, description, buttonText, icon: Icon, onClick }) => 
 )
 
 const DashboardHome = () => {
-    const { users, loading, error, refreshUsers } = useUsers()
+    const { users, loading, error, refreshUsers, lastAction } = useUsers()
     const navigate = useNavigate()
     const [snackbarOpen, setSnackbarOpen] = useState(false)
     const [snackbarMessage, setSnackbarMessage] = useState('')
     const [snackbarSeverity, setSnackbarSeverity] = useState('info')
 
+    // Handle user action notifications
+    useEffect(() => {
+        if (!lastAction?.type) return;
+
+        let message = '';
+        let severity = 'info';
+        
+        switch (lastAction.type) {
+            case 'added':
+                message = 'User added successfully';
+                severity = 'success';
+                break;
+            case 'updated':
+                message = 'User updated successfully';
+                severity = 'info';
+                break;
+            case 'deleted':
+                message = 'User deleted successfully';
+                severity = 'warning';
+                break;
+            case 'refreshed':
+                message = 'User data refreshed successfully';
+                severity = 'success';
+                break;
+            default:
+                return;
+        }
+
+        showSnackbar(message, severity);
+    }, [lastAction]);
+
     const handleCloseSnackbar = () => {
-        setSnackbarOpen(false)
-    }
+        setSnackbarOpen(false);
+    };
 
     const showSnackbar = (message, severity = 'info') => {
-        setSnackbarMessage(message)
-        setSnackbarSeverity(severity)
-        setSnackbarOpen(true)
-    }
+        setSnackbarMessage(message);
+        setSnackbarSeverity(severity);
+        setSnackbarOpen(true);
+    };
 
-    // Get the distribution of users by company
     const companyDistribution = users.reduce((acc, user) => {
         const company = user.company?.name || 'Unknown'
         acc[company] = (acc[company] || 0) + 1

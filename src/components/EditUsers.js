@@ -10,13 +10,14 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    IconButton,
+    TableSortLabel,
+    TablePagination,
     TextField,
     Chip,
-    TablePagination,
     Tooltip,
     CircularProgress,
     Alert,
+    IconButton,
 } from '@mui/material'
 import {
     Edit as EditIcon,
@@ -37,6 +38,8 @@ const EditUsers = () => {
     const [searchTerm, setSearchTerm] = useState('')
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(10)
+    const [orderBy, setOrderBy] = useState('id')
+    const [order, setOrder] = useState('asc')
     const navigate = useNavigate()
 
     const handleSearch = (e) => {
@@ -60,6 +63,12 @@ const EditUsers = () => {
         setPage(0)
     }
 
+    const handleSort = (property) => {
+        const isAsc = orderBy === property && order === 'asc'
+        setOrder(isAsc ? 'desc' : 'asc')
+        setOrderBy(property)
+    }
+
     const filteredUsers = useMemo(() => {
         const filtered = users.filter(
             (user) =>
@@ -81,9 +90,14 @@ const EditUsers = () => {
                         .includes(searchTerm.toLowerCase()))
         )
 
-        // Sort by ID
-        return [...filtered].sort((a, b) => a.id - b.id)
-    }, [users, searchTerm])
+        // Sort the filtered users
+        return [...filtered].sort((a, b) => {
+            if (orderBy === 'id') {
+                return order === 'asc' ? a.id - b.id : b.id - a.id
+            }
+            return 0
+        })
+    }, [users, searchTerm, orderBy, order])
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage)
@@ -188,7 +202,21 @@ const EditUsers = () => {
                             <Table sx={{ minWidth: 650 }} aria-label="users table">
                                 <TableHead>
                                     <TableRow sx={{ backgroundColor: 'action.hover' }}>
-                                        <TableCell sx={{ fontWeight: 'bold' }}>ID</TableCell>
+                                        <TableCell 
+                                            sx={{ 
+                                                fontWeight: 'bold',
+                                                cursor: 'pointer',
+                                                '&:hover': { backgroundColor: 'action.selected' }
+                                            }}
+                                        >
+                                            <TableSortLabel
+                                                active={orderBy === 'id'}
+                                                direction={orderBy === 'id' ? order : 'asc'}
+                                                onClick={() => handleSort('id')}
+                                            >
+                                                ID
+                                            </TableSortLabel>
+                                        </TableCell>
                                         <TableCell sx={{ fontWeight: 'bold' }}>Name</TableCell>
                                         <TableCell sx={{ fontWeight: 'bold' }}>Username</TableCell>
                                         <TableCell sx={{ fontWeight: 'bold' }}>Email</TableCell>
