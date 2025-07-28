@@ -149,9 +149,14 @@ const DashboardHome = () => {
     };
 
     const companyDistribution = users.reduce((acc, user) => {
-        const company = user.company?.name || 'Unknown'
-        acc[company] = (acc[company] || 0) + 1
-        return acc
+        const company = user.company?.name || 'Unknown';
+        const lowerCaseCompany = company.toLowerCase();
+        // Find if we already have this company (case-insensitive)
+        const existingCompany = Object.keys(acc).find(
+            key => key.toLowerCase() === lowerCaseCompany
+        ) || company; // Use the original case of the first occurrence
+        acc[existingCompany] = (acc[existingCompany] || 0) + 1;
+        return acc;
     }, {})
 
     const recentUsers = [...users]

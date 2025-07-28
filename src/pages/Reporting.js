@@ -86,7 +86,7 @@ const Reporting = () => {
             }
         });
         // Return the original case versions, but deduplicated case-insensitively
-        return Array.from(companyMap.values()).sort((a, b) => 
+        return Array.from(companyMap.values()).sort((a, b) =>
             a.localeCompare(b, undefined, {sensitivity: 'base'})
         );
     }, [users]);
@@ -158,7 +158,7 @@ const Reporting = () => {
                         String(value).toLowerCase().includes(searchTerm.toLowerCase())
                     );
                 const matchesStatus = statusFilter === 'all' || user.status === statusFilter;
-                const matchesCompany = companyFilter === 'all' || 
+                const matchesCompany = companyFilter === 'all' ||
                     (user.company && user.company.toLowerCase() === companyFilter.toLowerCase());
                 return matchesSearch && matchesStatus && matchesCompany;
             })
