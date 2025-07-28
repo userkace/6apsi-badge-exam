@@ -13,6 +13,7 @@ import { RecordsProvider } from './context/RecordsContext'
 // Import components
 import Landing from './pages/Landing'
 import Login from './auth/Login'
+import Signup from './auth/Signup'
 import Dashboard from './pages/Dashboard'
 import Reporting from './pages/Reporting'
 import DashboardHome from './components/DashboardHome'
@@ -83,6 +84,14 @@ const AnimatedRoutes = () => {
                     element={
                         <PageTransition>
                             <Login />
+                        </PageTransition>
+                    }
+                />
+                <Route
+                    path="/signup"
+                    element={
+                        <PageTransition>
+                            <Signup />
                         </PageTransition>
                     }
                 />

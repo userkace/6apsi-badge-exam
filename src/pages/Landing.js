@@ -133,6 +133,23 @@ const Landing = () => {
                                     Sign In
                                 </Link>
                             </Typography>
+                            <Typography
+                                variant="body2"
+                                color="textSecondary"
+                                sx={{ marginTop: theme.spacing(1) }}
+                            >
+                                New to our platform?{' '}
+                                <Link
+                                    to="/signup"
+                                    style={{
+                                        color: theme.palette.primary.main,
+                                        textDecoration: 'none',
+                                        fontWeight: 600,
+                                    }}
+                                >
+                                    Sign Up
+                                </Link>
+                            </Typography>
                         </Box>
                     </StyledPaper>
                 </HeroContent>
