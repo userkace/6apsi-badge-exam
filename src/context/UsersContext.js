@@ -14,7 +14,7 @@ export const UsersProvider = ({ children }) => {
             try {
                 // Check if we have cached users in localStorage first
                 const cachedUsers = localStorage.getItem('users')
-                
+
                 if (cachedUsers) {
                     setUsers(JSON.parse(cachedUsers))
                     setLoading(false)
@@ -23,34 +23,34 @@ export const UsersProvider = ({ children }) => {
                 let allUsers = []
                 const totalUsersNeeded = 100
                 const usersPerRequest = 10 // JSONPlaceholder default limit
-                
+
                 // Calculate how many requests we need
                 const requestCount = Math.ceil(totalUsersNeeded / usersPerRequest)
-                
+
                 // Make multiple requests and combine the results
                 for (let i = 0; i < requestCount; i++) {
                     const response = await axios.get('https://jsonplaceholder.typicode.com/users')
-                    
+
                     // For each batch, modify user IDs to make them unique
                     const batchUsers = response.data.map(user => ({
                         ...user,
                         id: user.id + (i * usersPerRequest) // Ensure unique IDs across batches
                     }))
-                    
+
                     allUsers = [...allUsers, ...batchUsers]
-                    
+
                     // Break if we've reached our target
                     if (allUsers.length >= totalUsersNeeded) {
                         allUsers = allUsers.slice(0, totalUsersNeeded)
                         break
                     }
                 }
-                
+
                 setUsers(allUsers)
-                
+
                 // Cache the results
                 localStorage.setItem('users', JSON.stringify(allUsers))
-                
+
             } catch (err) {
                 setError('Failed to fetch users. Please try again later.')
                 console.error('Error fetching users:', err)
@@ -108,29 +108,29 @@ export const UsersProvider = ({ children }) => {
             let allUsers = []
             const totalUsersNeeded = 100
             const usersPerRequest = 10 // JSONPlaceholder default limit
-            
+
             // Calculate how many requests we need
             const requestCount = Math.ceil(totalUsersNeeded / usersPerRequest)
-            
+
             // Make multiple requests and combine the results
             for (let i = 0; i < requestCount; i++) {
                 const response = await axios.get('https://jsonplaceholder.typicode.com/users')
-                
+
                 // For each batch, modify user IDs to make them unique
                 const batchUsers = response.data.map(user => ({
                     ...user,
                     id: user.id + (i * usersPerRequest) // Ensure unique IDs across batches
                 }))
-                
+
                 allUsers = [...allUsers, ...batchUsers]
-                
+
                 // Break if we've reached our target
                 if (allUsers.length >= totalUsersNeeded) {
                     allUsers = allUsers.slice(0, totalUsersNeeded)
                     break
                 }
             }
-            
+
             setUsers(allUsers)
             localStorage.setItem('users', JSON.stringify(allUsers))
         } catch (err) {
