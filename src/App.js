@@ -15,7 +15,6 @@ import Landing from './pages/Landing'
 import Login from './auth/Login'
 import Signup from './auth/Signup'
 import Dashboard from './pages/Dashboard'
-import Reporting from './pages/Reporting'
 import DashboardHome from './components/DashboardHome'
 import AddUser from './components/AddUser'
 import EditUsers from './components/EditUsers'
@@ -110,14 +109,6 @@ const AnimatedRoutes = () => {
                         element={
                             <PageTransition>
                                 <DashboardHome />
-                            </PageTransition>
-                        }
-                    />
-                    <Route
-                        path="reports"
-                        element={
-                            <PageTransition>
-                                <Reporting />
                             </PageTransition>
                         }
                     />

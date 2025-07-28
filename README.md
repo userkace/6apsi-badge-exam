@@ -1,6 +1,6 @@
 # 6APSI Badge Exam - React Dashboard Application
 
-A modern, responsive dashboard application built with React, Material-UI, and React Router. This application includes authentication, a landing page, and a protected dashboard with reporting functionality.
+A modern, responsive dashboard application built with React, Material-UI, and React Router. This application includes authentication, a landing page, and a protected dashboard.
 
 ## Students
 
@@ -15,8 +15,7 @@ A modern, responsive dashboard application built with React, Material-UI, and Re
 - **Authentication**: Secure login/logout functionality
 - **Responsive Design**: Works on desktop and mobile devices
 - **Dashboard**: Main interface with sidebar navigation
-- **Reporting**: View and filter records in a data table
-- **CRUD Operations**: Create, Read, Update, and Delete records
+- **CRUD Operations**: Create, Read, Update, and Delete users
 - **Protected Routes**: Secure access to authenticated content
 
 ## Tech Stack

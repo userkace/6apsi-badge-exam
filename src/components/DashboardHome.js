@@ -20,7 +20,6 @@ import {
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import {
-    Assessment as AssessmentIcon,
     AddCircle as AddCircleIcon,
     Edit as EditIcon,
     List as ListIcon,
@@ -218,15 +217,6 @@ const DashboardHome = () => {
                         buttonText="Manage Users"
                         icon={EditIcon}
                         onClick={() => navigate('/dashboard/edit')}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6} md={3}>
-                    <ActionCard
-                        title="Reports"
-                        description="Access analytics and reports about your user base."
-                        buttonText="View Reports"
-                        icon={AssessmentIcon}
-                        onClick={() => navigate('/dashboard/reports')}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>

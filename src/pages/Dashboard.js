@@ -42,7 +42,6 @@ const Dashboard = () => {
         { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
         { text: 'Add User', icon: <AddIcon />, path: '/dashboard/add' },
         { text: 'Manage Users', icon: <EditIcon />, path: '/dashboard/edit' },
-        { text: 'Reports', icon: <ListIcon />, path: '/dashboard/reports' },
     ]
 
     const handleLogout = () => {
