@@ -12,6 +12,7 @@ import {
     useMediaQuery,
     styled,
     Button,
+    Link,
 } from '@mui/material'
 import {
   ArrowBack as ArrowBackIcon,
@@ -169,7 +170,7 @@ const About = () => {
                     },
                 }}>
                     {/* First Card */}
-                    <Box sx={{ 
+                    <Box sx={{
                         flex: { xs: '1 1 100%', md: '0 0 300px' },
                         minWidth: { xs: '100%', md: '300px' },
                         maxWidth: { xs: '100%', md: '300px' }
@@ -190,7 +191,7 @@ const About = () => {
                     </Box>
 
                     {/* Second Card */}
-                    <Box sx={{ 
+                    <Box sx={{
                         flex: { xs: '1 1 100%', md: '0 0 300px' },
                         minWidth: { xs: '100%', md: '300px' },
                         maxWidth: { xs: '100%', md: '300px' }
@@ -211,7 +212,7 @@ const About = () => {
                     </Box>
 
                     {/* Third Card */}
-                    <Box sx={{ 
+                    <Box sx={{
                         flex: { xs: '1 1 100%', md: '0 0 300px' },
                         minWidth: { xs: '100%', md: '300px' },
                         maxWidth: { xs: '100%', md: '300px' }
@@ -316,8 +317,17 @@ const About = () => {
 
                 <Box mt={8} textAlign="center">
                     <Typography variant="body2" color="textSecondary">
-                        © {new Date().getFullYear()} 6APSI Badge Exam Project.
-                        All rights reserved.
+                        &copy; {new Date().getFullYear()}{' '}
+                        <Link
+                            href="https://github.com/userkace/6apsi-badge-exam"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            color="inherit"
+                            underline="hover"
+                        >
+                            6APSI Badge Exam Project
+                        </Link>
+                        . All rights reserved.
                     </Typography>
                 </Box>
             </StyledPaper>

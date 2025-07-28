@@ -1,8 +1,12 @@
 # 6APSI Badge Exam - React Dashboard Application
 
-A modern, responsive dashboard application built with React, Material-UI, and React Router. This application includes authentication, a landing page, and a protected dashboard.
+A modern, responsive dashboard application built with React, Material-UI, and React Router. This application includes authentication, a landing page, and a protected dashboard with user management capabilities.
 
-## Students
+## Live Demo
+
+[View Live Demo](https://badge-exam.vercel.app/)
+
+## Team Members
 
 - [Gopez, Ralph Louis](https://github.com/sevora)
 - [Robles, Eunice](https://github.com/EuniceRobles)
@@ -12,25 +16,47 @@ A modern, responsive dashboard application built with React, Material-UI, and Re
 
 ## Features
 
-- **Authentication**: Secure login/logout functionality
-- **Responsive Design**: Works on desktop and mobile devices
-- **Dashboard**: Main interface with sidebar navigation
-- **CRUD Operations**: Create, Read, Update, and Delete users
-- **Protected Routes**: Secure access to authenticated content
+- **Authentication**
+  - Secure login/logout functionality
+  - Protected routes
+  - Session persistence
+  - Form validation
+
+- **Dashboard**
+  - Responsive sidebar navigation
+  - User management interface
+  - Real-time data display
+
+- **User Management**
+  - View user list
+  - Add new users
+  - Edit existing users
+  - Delete users
+
+- **UI/UX**
+  - Modern, clean interface
+  - Responsive design
+  - Smooth page transitions
+  - Form validation feedback
 
 ## Tech Stack
 
-- React 18
-- Material-UI v5
-- React Router v6
-- React Hooks
-- Local Storage (for demo purposes)
+- **Frontend**
+  - React 19
+  - React Router v7
+  - Material-UI v7
+  - Framer Motion (for animations)
+  - Axios (for API requests)
+
+- **State Management**
+  - React Context API
+  - Local Storage (for session persistence)
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js (v14 or later)
+- Node.js (v16 or later)
 - npm or yarn
 
 ### Installation
@@ -38,7 +64,7 @@ A modern, responsive dashboard application built with React, Material-UI, and Re
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/yourusername/6apsi-badge-exam.git
+    git clone https://github.com/userkace/6apsi-badge-exam.git
     cd 6apsi-badge-exam
     ```
 
@@ -60,78 +86,45 @@ A modern, responsive dashboard application built with React, Material-UI, and Re
 
 4. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-## Available Scripts
+## Authentication
 
-In the project directory, you can run:
+The application uses a secure authentication system:
+
+- Protected routes that redirect unauthenticated users to the login page
+- Session persistence using localStorage
+- Form validation for login and signup
+- Secure token-based authentication
+
+## Project Structure
+
+```
+src/
+├── auth/               # Authentication components
+│   ├── Login.js       # Login page
+│   ├── Logout.js      # Logout handler
+│   └── Signup.js      # User registration
+├── components/        # Reusable UI components
+├── context/           # React Context providers
+│   ├── AuthContext.js # Authentication state
+│   └── UsersContext.js # User data management
+├── pages/             # Page components
+│   ├── About.js       # About page
+│   ├── Dashboard.js   # Main dashboard
+│   └── Landing.js     # Landing page
+├── App.js            # Main application component
+└── index.js          # Application entry point
+```
+
+## Available Scripts
 
 - `npm start` - Runs the app in development mode
 - `npm test` - Launches the test runner
 - `npm run build` - Builds the app for production
 - `npm run eject` - Ejects from Create React App (use with caution)
 
-## Available Scripts
+## Acknowledgments
 
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Material-UI for the awesome UI components
+- React Router for routing
+- Framer Motion for smooth animations
+- Create React App for the project setup
