@@ -24,6 +24,7 @@ import {
     Edit as EditIcon,
     Logout as LogoutIcon,
     Assessment as ReportIcon,
+    Email,
 } from '@mui/icons-material'
 import { useAuth } from '../context/AuthContext'
 
@@ -31,21 +32,14 @@ const drawerWidth = 240
 
 const Dashboard = () => {
     const [mobileOpen, setMobileOpen] = useState(false)
+    const { logout, user } = useAuth()
     const navigate = useNavigate()
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
-    const { logout } = useAuth()
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen)
     }
-
-    const menuItems = [
-        { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
-        { text: 'Add User', icon: <AddIcon />, path: '/dashboard/add' },
-        { text: 'Edit Users', icon: <EditIcon />, path: '/dashboard/edit' },
-        { text: 'Reports', icon: <ReportIcon />, path: '/dashboard/reports' },
-    ]
 
     const handleLogout = async () => {
         try {
@@ -58,6 +52,13 @@ const Dashboard = () => {
             navigate('/')
         }
     }
+
+    const menuItems = [
+        { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
+        { text: 'Add User', icon: <AddIcon />, path: '/dashboard/add' },
+        { text: 'Edit Users', icon: <EditIcon />, path: '/dashboard/edit' },
+        { text: 'Reports', icon: <ReportIcon />, path: '/dashboard/reports' },
+    ]
 
     const drawer = (
         <div>
@@ -112,7 +113,7 @@ const Dashboard = () => {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" noWrap component="div">
-                        Dashboard
+                        Welcome, {user?.email || 'User'}
                     </Typography>
                 </Toolbar>
             </AppBar>
