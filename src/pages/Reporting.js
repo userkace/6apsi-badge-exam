@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useContext } from 'react';
 import {
     Box,
     Paper,
@@ -21,93 +21,75 @@ import {
     CircularProgress,
     Alert,
     IconButton,
-    Tooltip
+    Tooltip,
+    Avatar
 } from '@mui/material';
 import {
     Search as SearchIcon,
     Refresh as RefreshIcon,
     ArrowBack as ArrowBackIcon,
+    Person as PersonIcon,
+    Email as EmailIcon,
+    Phone as PhoneIcon,
+    Language as LanguageIcon,
+    Business as CompanyIcon,
+    LocationOn as AddressIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { UsersProvider, useUsers } from '../context/UsersContext';
 
 // Constants
 const STATUS_OPTIONS = [
     'Active',
+    'Inactive',
+    'Suspended',
     'Pending',
-    'Completed',
-    'Cancelled',
-    'On Hold',
 ];
 
 const statusColors = {
     Active: 'success',
-    Pending: 'warning',
-    Completed: 'primary',
-    Cancelled: 'error',
-    'On Hold': 'info',
+    Inactive: 'warning',
+    Suspended: 'error',
+    Pending: 'info',
 };
 
 const Reporting = () => {
     const navigate = useNavigate();
-    const [records, setRecords] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const { users, loading: usersLoading, error: usersError, refreshUsers } = useUsers();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
     const [orderBy, setOrderBy] = useState('id');
     const [order, setOrder] = useState('asc');
+    const [error, setError] = useState(null);
 
-    // Fetch records from API
-    const fetchRecords = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            // Check if we have cached records in localStorage first
-            const cachedRecords = localStorage.getItem('reportingRecords');
-
-            if (cachedRecords) {
-                setRecords(JSON.parse(cachedRecords));
-                setLoading(false);
-                return;
-            }
-
-            // Fetch from API if not in cache
-            const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
-
-            // Transform the data to match our reporting structure
-            const formattedRecords = response.data.map((post, index) => ({
-                id: post.id,
-                title: post.title,
-                description: post.body,
-                status: STATUS_OPTIONS[Math.floor(Math.random() * STATUS_OPTIONS.length)],
-                date: new Date(Date.now() - Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                priority: ['Low', 'Medium', 'High'][Math.floor(Math.random() * 3)],
-            }));
-
-            // Cache the results
-            localStorage.setItem('reportingRecords', JSON.stringify(formattedRecords));
-            setRecords(formattedRecords);
-        } catch (err) {
-            console.error('Error fetching records:', err);
-            setError('Failed to load records. Please try again later.');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    // Initial data fetch
-    useEffect(() => {
-        fetchRecords();
-    }, []);
+    // Process users data for reporting
+    const processedUsers = useMemo(() => {
+        if (!users) return [];
+        
+        return users.map(user => ({
+            id: user.id,
+            name: user.name,
+            username: user.username,
+            email: user.email,
+            phone: user.phone,
+            website: user.website,
+            company: user.company?.name || 'N/A',
+            city: user.address?.city || 'N/A',
+            status: STATUS_OPTIONS[user.id % STATUS_OPTIONS.length], // Assign status based on ID for demo
+            joinDate: new Date(Date.now() - Math.floor(Math.random() * 365) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        }));
+    }, [users]);
 
     // Handle refresh
-    const handleRefresh = () => {
-        // Clear cache and refetch
-        localStorage.removeItem('reportingRecords');
-        fetchRecords();
+    const handleRefresh = async () => {
+        try {
+            await refreshUsers();
+        } catch (err) {
+            setError('Failed to refresh users. Please try again.');
+            console.error('Error refreshing users:', err);
+        }
     };
 
     // Handle sort
@@ -117,27 +99,30 @@ const Reporting = () => {
         setOrderBy(property);
     };
 
-    // Filter and sort records
-    const filteredAndSortedRecords = useMemo(() => {
-        return records
-            .filter(record => {
+    // Filter and sort users
+    const filteredAndSortedUsers = useMemo(() => {
+        if (!processedUsers.length) return [];
+
+        return processedUsers
+            .filter(user => {
                 const matchesSearch = searchTerm === '' ||
-                    record.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    record.description.toLowerCase().includes(searchTerm.toLowerCase());
-                const matchesStatus = statusFilter === 'all' || record.status === statusFilter;
+                    Object.values(user).some(value => 
+                        String(value).toLowerCase().includes(searchTerm.toLowerCase())
+                    );
+                const matchesStatus = statusFilter === 'all' || user.status === statusFilter;
                 return matchesSearch && matchesStatus;
             })
             .sort((a, b) => {
-                if (orderBy === 'date') {
+                if (orderBy === 'joinDate') {
                     return order === 'asc'
-                        ? new Date(a.date) - new Date(b.date)
-                        : new Date(b.date) - new Date(a.date);
+                        ? new Date(a.joinDate) - new Date(b.joinDate)
+                        : new Date(b.joinDate) - new Date(a.joinDate);
                 }
                 return order === 'asc'
                     ? a[orderBy] > b[orderBy] ? 1 : -1
                     : a[orderBy] < b[orderBy] ? 1 : -1;
             });
-    }, [records, searchTerm, statusFilter, orderBy, order]);
+    }, [processedUsers, searchTerm, statusFilter, orderBy, order]);
 
     // Handle pagination
     const handleChangePage = (event, newPage) => {
@@ -150,12 +135,12 @@ const Reporting = () => {
     };
 
     // Pagination
-    const paginatedRecords = filteredAndSortedRecords.slice(
+    const paginatedUsers = filteredAndSortedUsers.slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage
     );
 
-    if (loading) {
+    if (usersLoading) {
         return (
             <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
                 <CircularProgress />
@@ -163,14 +148,14 @@ const Reporting = () => {
         );
     }
 
-    if (error) {
+    if (usersError || error) {
         return (
             <Box p={3}>
-                <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={fetchRecords}
+                <Alert severity="error" sx={{ mb: 2 }}>{usersError || error}</Alert>
+                <Button 
+                    variant="contained" 
+                    color="primary" 
+                    onClick={handleRefresh}
                     startIcon={<RefreshIcon />}
                 >
                     Retry
@@ -181,10 +166,10 @@ const Reporting = () => {
 
     return (
         <Box p={3}>
-            <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
+            <Box 
+                display="flex" 
+                justifyContent="space-between" 
+                alignItems="center" 
                 mb={3}
                 flexWrap="wrap"
                 gap={2}
@@ -196,14 +181,14 @@ const Reporting = () => {
                         </IconButton>
                     </Tooltip>
                     <Typography variant="h5" component="h1">
-                        Records Report
+                        Users Report
                     </Typography>
                 </Box>
 
                 <Box display="flex" gap={2} flexWrap="wrap">
                     <TextField
                         size="small"
-                        placeholder="Search records..."
+                        placeholder="Search users..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         sx={{ minWidth: 200, flexGrow: 1 }}
@@ -254,16 +239,18 @@ const Reporting = () => {
                                         ID
                                     </TableSortLabel>
                                 </TableCell>
+                                <TableCell>User</TableCell>
                                 <TableCell>
                                     <TableSortLabel
-                                        active={orderBy === 'title'}
-                                        direction={orderBy === 'title' ? order : 'asc'}
-                                        onClick={() => handleSort('title')}
+                                        active={orderBy === 'email'}
+                                        direction={orderBy === 'email' ? order : 'asc'}
+                                        onClick={() => handleSort('email')}
                                     >
-                                        Title
+                                        Contact
                                     </TableSortLabel>
                                 </TableCell>
-                                <TableCell>Description</TableCell>
+                                <TableCell>Company</TableCell>
+                                <TableCell>Location</TableCell>
                                 <TableCell>
                                     <TableSortLabel
                                         active={orderBy === 'status'}
@@ -275,42 +262,82 @@ const Reporting = () => {
                                 </TableCell>
                                 <TableCell>
                                     <TableSortLabel
-                                        active={orderBy === 'date'}
-                                        direction={orderBy === 'date' ? order : 'asc'}
-                                        onClick={() => handleSort('date')}
+                                        active={orderBy === 'joinDate'}
+                                        direction={orderBy === 'joinDate' ? order : 'desc'}
+                                        onClick={() => handleSort('joinDate')}
                                     >
-                                        Date
+                                        Join Date
                                     </TableSortLabel>
                                 </TableCell>
-                                <TableCell>Priority</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {paginatedRecords.length > 0 ? (
-                                paginatedRecords.map((record) => (
-                                    <TableRow key={record.id} hover>
-                                        <TableCell>{record.id}</TableCell>
-                                        <TableCell sx={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                                            {record.title}
-                                        </TableCell>
-                                        <TableCell sx={{ maxWidth: 300, overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                            {record.description}
+                            {paginatedUsers.length > 0 ? (
+                                paginatedUsers.map((user) => (
+                                    <TableRow key={user.id} hover>
+                                        <TableCell>{user.id}</TableCell>
+                                        <TableCell>
+                                            <Box display="flex" alignItems="center" gap={1}>
+                                                <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main' }}>
+                                                    {user.name.charAt(0)}
+                                                </Avatar>
+                                                <Box>
+                                                    <Typography variant="body2" fontWeight="medium">
+                                                        {user.name}
+                                                    </Typography>
+                                                    <Typography variant="caption" color="text.secondary">
+                                                        @{user.username}
+                                                    </Typography>
+                                                </Box>
+                                            </Box>
                                         </TableCell>
                                         <TableCell>
-                                            <Chip
-                                                label={record.status}
-                                                color={statusColors[record.status] || 'default'}
+                                            <Box display="flex" flexDirection="column" gap={0.5}>
+                                                <Box display="flex" alignItems="center" gap={0.5}>
+                                                    <EmailIcon fontSize="small" color="action" />
+                                                    <Typography variant="body2" noWrap>
+                                                        {user.email}
+                                                    </Typography>
+                                                </Box>
+                                                <Box display="flex" alignItems="center" gap={0.5}>
+                                                    <PhoneIcon fontSize="small" color="action" />
+                                                    <Typography variant="body2">
+                                                        {user.phone}
+                                                    </Typography>
+                                                </Box>
+                                            </Box>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Box display="flex" alignItems="center" gap={0.5}>
+                                                <CompanyIcon fontSize="small" color="action" />
+                                                <Typography variant="body2">
+                                                    {user.company}
+                                                </Typography>
+                                            </Box>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Box display="flex" alignItems="center" gap={0.5}>
+                                                <AddressIcon fontSize="small" color="action" />
+                                                <Typography variant="body2">
+                                                    {user.city}
+                                                </Typography>
+                                            </Box>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Chip 
+                                                label={user.status} 
+                                                color={statusColors[user.status] || 'default'} 
                                                 size="small"
+                                                sx={{ minWidth: 80 }}
                                             />
                                         </TableCell>
-                                        <TableCell>{record.date}</TableCell>
-                                        <TableCell>{record.priority}</TableCell>
+                                        <TableCell>{user.joinDate}</TableCell>
                                     </TableRow>
                                 ))
                             ) : (
                                 <TableRow>
-                                    <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
-                                        No records found
+                                    <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
+                                        No users found
                                     </TableCell>
                                 </TableRow>
                             )}
@@ -320,7 +347,7 @@ const Reporting = () => {
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={filteredAndSortedRecords.length}
+                    count={filteredAndSortedUsers.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
