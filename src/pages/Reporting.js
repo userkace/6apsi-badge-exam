@@ -55,7 +55,13 @@ const statusColors = {
 
 const Reporting = () => {
     const navigate = useNavigate();
-    const { users, loading: usersLoading, error: usersError, refreshUsers } = useUsers();
+    const { 
+        users, 
+        loading: usersLoading, 
+        error: usersError, 
+        refreshUsers, 
+        updateUser 
+    } = useUsers();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [searchTerm, setSearchTerm] = useState('');
@@ -64,6 +70,7 @@ const Reporting = () => {
     const [orderBy, setOrderBy] = useState('id');
     const [order, setOrder] = useState('asc');
     const [error, setError] = useState(null);
+    const [editingStatus, setEditingStatus] = useState(null);
 
     // Get unique companies for the filter
     const companyOptions = useMemo(() => {
@@ -85,7 +92,7 @@ const Reporting = () => {
             website: user.website,
             company: user.company?.name || 'N/A',
             city: user.address?.city || 'N/A',
-            status: STATUS_OPTIONS[user.id % STATUS_OPTIONS.length], // Assign status based on ID for demo
+            status: user.status || STATUS_OPTIONS[user.id % STATUS_OPTIONS.length],
             joinDate: new Date(Date.now() - Math.floor(Math.random() * 365) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         }));
     }, [users]);
@@ -109,6 +116,21 @@ const Reporting = () => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
+    };
+
+    // Handle status change
+    const handleStatusChange = async (userId, newStatus) => {
+        try {
+            const userToUpdate = users.find(user => user.id === userId);
+            if (userToUpdate) {
+                await updateUser(userId, { ...userToUpdate, status: newStatus });
+            }
+        } catch (err) {
+            console.error('Error updating user status:', err);
+            setError('Failed to update user status');
+        } finally {
+            setEditingStatus(null);
+        }
     };
 
     // Filter and sort users
@@ -358,12 +380,36 @@ const Reporting = () => {
                                             </Box>
                                         </TableCell>
                                         <TableCell>
-                                            <Chip
-                                                label={user.status}
-                                                color={statusColors[user.status] || 'default'}
-                                                size="small"
-                                                sx={{ minWidth: 80 }}
-                                            />
+                                            {editingStatus === user.id ? (
+                                                <Select
+                                                    value={user.status}
+                                                    onChange={(e) => handleStatusChange(user.id, e.target.value)}
+                                                    size="small"
+                                                    autoFocus
+                                                    onBlur={() => setEditingStatus(null)}
+                                                    sx={{ minWidth: 120 }}
+                                                >
+                                                    {STATUS_OPTIONS.map((status) => (
+                                                        <MenuItem key={status} value={status}>
+                                                            {status}
+                                                        </MenuItem>
+                                                    ))}
+                                                </Select>
+                                            ) : (
+                                                <Chip
+                                                    label={user.status}
+                                                    color={statusColors[user.status] || 'default'}
+                                                    size="small"
+                                                    sx={{ 
+                                                        minWidth: 120,
+                                                        cursor: 'pointer',
+                                                        '&:hover': {
+                                                            opacity: 0.8
+                                                        }
+                                                    }}
+                                                    onClick={() => setEditingStatus(user.id)}
+                                                />
+                                            )}
                                         </TableCell>
                                         <TableCell>{user.joinDate}</TableCell>
                                     </TableRow>
