@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link as RouterLink } from 'react-router-dom'
 import {
     Avatar,
     Button,
@@ -114,13 +114,13 @@ const Login = () => {
                     </Button>
                     <Grid container spacing={1}>
                         <Grid item xs>
-                            <Link href="#" variant="body2">
-                                Forgot password?
+                            <Link component={RouterLink} to="/signup" variant="body2">
+                                Don't have an account? Sign up
                             </Link>
                         </Grid>
                         <Grid item>
-                            <Link href="/" variant="body2">
-                                {'Back to Home'}
+                            <Link component={RouterLink} to="/" variant="body2">
+                                Back to Home
                             </Link>
                         </Grid>
                     </Grid>

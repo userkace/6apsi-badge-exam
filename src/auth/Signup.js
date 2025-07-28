@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link as RouterLink } from 'react-router-dom'
 import {
     Avatar,
     Button,
@@ -10,7 +10,6 @@ import {
     Typography,
     Container,
     CssBaseline,
-    Alert,
     FormHelperText,
 } from '@mui/material'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
@@ -310,12 +309,12 @@ const Signup = () => {
                     </Button>
                     <Grid container spacing={1}>
                         <Grid item xs>
-                            <Link href="/login" variant="body2">
+                            <Link component={RouterLink} to="/login" variant="body2">
                                 Already have an account? Sign in
                             </Link>
                         </Grid>
                         <Grid item>
-                            <Link href="/" variant="body2">
+                            <Link component={RouterLink} to="/" variant="body2">
                                 Back to Home
                             </Link>
                         </Grid>
