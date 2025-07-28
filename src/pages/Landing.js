@@ -71,7 +71,7 @@ const Landing = () => {
                                 marginBottom: theme.spacing(4),
                             }}
                         >
-                            Streamline your workflow and manage your records
+                            Streamline your workflow and manage your users
                             efficiently with our powerful dashboard.
                         </Typography>
 

@@ -40,8 +40,8 @@ const Dashboard = () => {
 
     const menuItems = [
         { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
-        { text: 'Add Record', icon: <AddIcon />, path: '/dashboard/add' },
-        { text: 'Edit Records', icon: <EditIcon />, path: '/dashboard/edit' },
+        { text: 'Add User', icon: <AddIcon />, path: '/dashboard/add' },
+        { text: 'Manage Users', icon: <EditIcon />, path: '/dashboard/edit' },
         { text: 'Reports', icon: <ListIcon />, path: '/dashboard/reports' },
     ]
 

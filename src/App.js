@@ -8,7 +8,7 @@ import {
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { AnimatePresence } from 'framer-motion'
-import { RecordsProvider } from './context/RecordsContext'
+import { UsersProvider } from './context/UsersContext'
 
 // Import components
 import Landing from './pages/Landing'
@@ -17,8 +17,8 @@ import Signup from './auth/Signup'
 import Dashboard from './pages/Dashboard'
 import Reporting from './pages/Reporting'
 import DashboardHome from './components/DashboardHome'
-import AddRecord from './components/AddRecord'
-import EditRecords from './components/EditRecords'
+import AddUser from './components/AddUser'
+import EditUsers from './components/EditUsers'
 import About from './pages/About'
 import PageTransition from './components/PageTransition'
 
@@ -125,7 +125,7 @@ const AnimatedRoutes = () => {
                         path="add"
                         element={
                             <PageTransition>
-                                <AddRecord />
+                                <AddUser />
                             </PageTransition>
                         }
                     />
@@ -133,7 +133,7 @@ const AnimatedRoutes = () => {
                         path="edit"
                         element={
                             <PageTransition>
-                                <EditRecords />
+                                <EditUsers />
                             </PageTransition>
                         }
                     />
@@ -141,7 +141,7 @@ const AnimatedRoutes = () => {
                         path="edit/:id"
                         element={
                             <PageTransition>
-                                <AddRecord editMode />
+                                <AddUser editMode />
                             </PageTransition>
                         }
                     />
@@ -158,11 +158,11 @@ function App() {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <RecordsProvider>
+            <UsersProvider>
                 <Router>
                     <AnimatedRoutes />
                 </Router>
-            </RecordsProvider>
+            </UsersProvider>
         </ThemeProvider>
     )
 }
