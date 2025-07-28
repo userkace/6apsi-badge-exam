@@ -189,7 +189,7 @@ const AddUser = ({ editMode: editModeProp = false }) => {
                 sx={{ mb: 3 }}
                 variant="outlined"
             >
-                Back to Users List
+                Back to User List
             </Button>
 
             <Paper elevation={3} sx={{ p: 4 }}>
