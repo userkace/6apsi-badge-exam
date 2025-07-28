@@ -75,7 +75,7 @@ const Reporting = () => {
     // Process users data for reporting
     const processedUsers = useMemo(() => {
         if (!users) return [];
-        
+
         return users.map(user => ({
             id: user.id,
             name: user.name,
@@ -118,7 +118,7 @@ const Reporting = () => {
         return processedUsers
             .filter(user => {
                 const matchesSearch = searchTerm === '' ||
-                    Object.values(user).some(value => 
+                    Object.values(user).some(value =>
                         String(value).toLowerCase().includes(searchTerm.toLowerCase())
                     );
                 const matchesStatus = statusFilter === 'all' || user.status === statusFilter;
@@ -165,9 +165,9 @@ const Reporting = () => {
         return (
             <Box p={3}>
                 <Alert severity="error" sx={{ mb: 2 }}>{usersError || error}</Alert>
-                <Button 
-                    variant="contained" 
-                    color="primary" 
+                <Button
+                    variant="contained"
+                    color="primary"
                     onClick={handleRefresh}
                     startIcon={<RefreshIcon />}
                 >
@@ -179,10 +179,10 @@ const Reporting = () => {
 
     return (
         <Box p={3}>
-            <Box 
-                display="flex" 
-                justifyContent="space-between" 
-                alignItems="center" 
+            <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
                 mb={3}
                 flexWrap="wrap"
                 gap={2}
@@ -358,9 +358,9 @@ const Reporting = () => {
                                             </Box>
                                         </TableCell>
                                         <TableCell>
-                                            <Chip 
-                                                label={user.status} 
-                                                color={statusColors[user.status] || 'default'} 
+                                            <Chip
+                                                label={user.status}
+                                                color={statusColors[user.status] || 'default'}
                                                 size="small"
                                                 sx={{ minWidth: 80 }}
                                             />
