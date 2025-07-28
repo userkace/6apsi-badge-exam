@@ -55,12 +55,12 @@ const statusColors = {
 
 const Reporting = () => {
     const navigate = useNavigate();
-    const { 
-        users, 
-        loading: usersLoading, 
-        error: usersError, 
-        refreshUsers, 
-        updateUser 
+    const {
+        users,
+        loading: usersLoading,
+        error: usersError,
+        refreshUsers,
+        updateUser
     } = useUsers();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -400,7 +400,7 @@ const Reporting = () => {
                                                     label={user.status}
                                                     color={statusColors[user.status] || 'default'}
                                                     size="small"
-                                                    sx={{ 
+                                                    sx={{
                                                         minWidth: 120,
                                                         cursor: 'pointer',
                                                         '&:hover': {
