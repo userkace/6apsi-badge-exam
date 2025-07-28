@@ -60,9 +60,17 @@ const Reporting = () => {
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
+    const [companyFilter, setCompanyFilter] = useState('all');
     const [orderBy, setOrderBy] = useState('id');
     const [order, setOrder] = useState('asc');
     const [error, setError] = useState(null);
+
+    // Get unique companies for the filter
+    const companyOptions = useMemo(() => {
+        if (!users) return [];
+        const companies = new Set(users.map(user => user.company?.name).filter(Boolean));
+        return Array.from(companies).sort();
+    }, [users]);
 
     // Process users data for reporting
     const processedUsers = useMemo(() => {
@@ -86,6 +94,10 @@ const Reporting = () => {
     const handleRefresh = async () => {
         try {
             await refreshUsers();
+            // Reset filters on refresh
+            setStatusFilter('all');
+            setCompanyFilter('all');
+            setSearchTerm('');
         } catch (err) {
             setError('Failed to refresh users. Please try again.');
             console.error('Error refreshing users:', err);
@@ -110,7 +122,8 @@ const Reporting = () => {
                         String(value).toLowerCase().includes(searchTerm.toLowerCase())
                     );
                 const matchesStatus = statusFilter === 'all' || user.status === statusFilter;
-                return matchesSearch && matchesStatus;
+                const matchesCompany = companyFilter === 'all' || user.company === companyFilter;
+                return matchesSearch && matchesStatus && matchesCompany;
             })
             .sort((a, b) => {
                 if (orderBy === 'joinDate') {
@@ -122,7 +135,7 @@ const Reporting = () => {
                     ? a[orderBy] > b[orderBy] ? 1 : -1
                     : a[orderBy] < b[orderBy] ? 1 : -1;
             });
-    }, [processedUsers, searchTerm, statusFilter, orderBy, order]);
+    }, [processedUsers, searchTerm, statusFilter, companyFilter, orderBy, order]);
 
     // Handle pagination
     const handleChangePage = (event, newPage) => {
@@ -198,17 +211,38 @@ const Reporting = () => {
                             ),
                         }}
                     />
-                    <FormControl size="small" sx={{ minWidth: 150 }}>
+                    <FormControl size="small" sx={{ minWidth: 150, mr: 1 }}>
                         <InputLabel>Status</InputLabel>
                         <Select
                             value={statusFilter}
                             label="Status"
-                            onChange={(e) => setStatusFilter(e.target.value)}
+                            onChange={(e) => {
+                                setStatusFilter(e.target.value);
+                                setPage(0); // Reset to first page when filter changes
+                            }}
                         >
                             <MenuItem value="all">All Statuses</MenuItem>
                             {STATUS_OPTIONS.map((status) => (
                                 <MenuItem key={status} value={status}>
                                     {status}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    <FormControl size="small" sx={{ minWidth: 200, mr: 1 }}>
+                        <InputLabel>Company</InputLabel>
+                        <Select
+                            value={companyFilter}
+                            label="Company"
+                            onChange={(e) => {
+                                setCompanyFilter(e.target.value);
+                                setPage(0); // Reset to first page when filter changes
+                            }}
+                        >
+                            <MenuItem value="all">All Companies</MenuItem>
+                            {companyOptions.map((company) => (
+                                <MenuItem key={company} value={company}>
+                                    {company}
                                 </MenuItem>
                             ))}
                         </Select>
