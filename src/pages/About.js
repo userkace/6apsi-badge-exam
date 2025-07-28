@@ -147,34 +147,26 @@ const About = () => {
                 <Box sx={{
                     display: 'flex',
                     flexWrap: { xs: 'wrap', md: 'nowrap' },
-                    gap: 4,
+                    gap: 2,
                     justifyContent: 'center',
                     mb: 6,
                     width: '100%',
-                    overflowX: { xs: 'hidden', md: 'auto' },
+                    maxWidth: '100%',
+                    overflowX: 'hidden',
                     py: 2,
-                    px: { xs: 3, sm: 4, md: 8 },
+                    px: { xs: 0, sm: 2 },
+                    mx: 'auto',
+                    '& > *': {
+                        flex: { xs: '1 1 100%', md: '0 0 300px' },
+                        maxWidth: { xs: '100%', md: '300px' },
+                        px: { xs: 1, sm: 2 }
+                    },
                     '&::-webkit-scrollbar': {
-                        height: '8px',
-                    },
-                    '&::-webkit-scrollbar-track': {
-                        background: '#f1f1f1',
-                        borderRadius: '4px',
-                    },
-                    '&::-webkit-scrollbar-thumb': {
-                        background: '#888',
-                        borderRadius: '4px',
-                        '&:hover': {
-                            background: '#555',
-                        },
+                        display: 'none',
                     },
                 }}>
                     {/* First Card */}
-                    <Box sx={{
-                        flex: { xs: '1 1 100%', md: '0 0 300px' },
-                        minWidth: { xs: '100%', md: '300px' },
-                        maxWidth: { xs: '100%', md: '300px' }
-                    }}>
+                    <Box>
                         <StyledCard sx={{ height: '100%' }}>
                             <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
                                 <School color="primary" sx={{ fontSize: 60, opacity: 0.9 }} />
@@ -191,11 +183,7 @@ const About = () => {
                     </Box>
 
                     {/* Second Card */}
-                    <Box sx={{
-                        flex: { xs: '1 1 100%', md: '0 0 300px' },
-                        minWidth: { xs: '100%', md: '300px' },
-                        maxWidth: { xs: '100%', md: '300px' }
-                    }}>
+                    <Box>
                         <StyledCard sx={{ height: '100%' }}>
                             <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
                                 <Group color="primary" sx={{ fontSize: 60, opacity: 0.9 }} />
@@ -212,11 +200,7 @@ const About = () => {
                     </Box>
 
                     {/* Third Card */}
-                    <Box sx={{
-                        flex: { xs: '1 1 100%', md: '0 0 300px' },
-                        minWidth: { xs: '100%', md: '300px' },
-                        maxWidth: { xs: '100%', md: '300px' }
-                    }}>
+                    <Box>
                         <StyledCard sx={{ height: '100%' }}>
                             <Box sx={{ p: 3, display: 'flex', justifyContent: 'center' }}>
                                 <Code color="primary" sx={{ fontSize: 60, opacity: 0.9 }} />
