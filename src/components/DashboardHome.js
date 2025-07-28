@@ -9,14 +9,13 @@ import {
     ListItemText,
     Divider,
     Button,
-    Snackbar,
-    Alert,
     CircularProgress,
     Chip,
     Card,
     CardContent,
     Avatar,
     ListItemAvatar,
+    Alert
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import {
@@ -101,52 +100,8 @@ const ActionCard = ({ title, description, buttonText, icon: Icon, onClick }) => 
 )
 
 const DashboardHome = () => {
-    const { users, loading, error, refreshUsers, lastAction } = useUsers()
+    const { users, loading, error, refreshUsers } = useUsers()
     const navigate = useNavigate()
-    const [snackbarOpen, setSnackbarOpen] = useState(false)
-    const [snackbarMessage, setSnackbarMessage] = useState('')
-    const [snackbarSeverity, setSnackbarSeverity] = useState('info')
-
-    // Handle user action notifications
-    useEffect(() => {
-        if (!lastAction?.type) return;
-
-        let message = '';
-        let severity = 'info';
-        
-        switch (lastAction.type) {
-            case 'added':
-                message = 'User added successfully';
-                severity = 'success';
-                break;
-            case 'updated':
-                message = 'User updated successfully';
-                severity = 'info';
-                break;
-            case 'deleted':
-                message = 'User deleted successfully';
-                severity = 'warning';
-                break;
-            case 'refreshed':
-                message = 'User data refreshed successfully';
-                severity = 'success';
-                break;
-            default:
-                return;
-        }
-
-        showSnackbar(message, severity);
-    }, [lastAction]);
-
-    const handleCloseSnackbar = () => {
-        setSnackbarOpen(false);
-    };
-
-    const showSnackbar = (message, severity = 'info') => {
-        setSnackbarMessage(message);
-        setSnackbarSeverity(severity);
-        setSnackbarOpen(true);
-    };
 
     const companyDistribution = users.reduce((acc, user) => {
         const company = user.company?.name || 'Unknown';
@@ -262,7 +217,6 @@ const DashboardHome = () => {
                         icon={ListIcon}
                         onClick={() => {
                             refreshUsers()
-                            showSnackbar('User data refreshed successfully!', 'success')
                         }}
                     />
                 </Grid>
@@ -365,20 +319,6 @@ const DashboardHome = () => {
                     ))}
                 </Grid>
             </Paper>
-
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={6000}
-                onClose={handleCloseSnackbar}
-            >
-                <Alert
-                    onClose={handleCloseSnackbar}
-                    severity={snackbarSeverity}
-                    sx={{ width: '100%' }}
-                >
-                    {snackbarMessage}
-                </Alert>
-            </Snackbar>
         </Box>
     )
 }

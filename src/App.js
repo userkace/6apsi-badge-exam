@@ -10,6 +10,7 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { AnimatePresence } from 'framer-motion'
 import { UsersProvider } from './context/UsersContext'
 import { AuthProvider, useAuth } from './context/AuthContext'
+import { SnackbarProvider } from './context/SnackbarContext'
 
 // Import components
 import Landing from './pages/Landing'
@@ -198,11 +199,13 @@ function App() {
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <AuthProvider>
-                <UsersProvider>
-                    <Router>
-                        <AnimatedRoutes />
-                    </Router>
-                </UsersProvider>
+                <SnackbarProvider>
+                    <UsersProvider>
+                        <Router>
+                            <AnimatedRoutes />
+                        </Router>
+                    </UsersProvider>
+                </SnackbarProvider>
             </AuthProvider>
         </ThemeProvider>
     )

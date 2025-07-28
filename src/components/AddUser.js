@@ -158,10 +158,10 @@ const AddUser = ({ editMode: editModeProp = false }) => {
 
             if (editMode && id) {
                 await updateUser(parseInt(id), formData)
-                navigate('/dashboard')
+                navigate('/dashboard/edit')
             } else {
                 await addUser(formData)
-                navigate('/dashboard')
+                navigate('/dashboard/')
             }
         } catch (error) {
             console.error('Error saving user:', error)
