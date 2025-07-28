@@ -92,8 +92,7 @@ const Reporting = () => {
             website: user.website,
             company: user.company?.name || 'N/A',
             city: user.address?.city || 'N/A',
-            status: user.status || STATUS_OPTIONS[user.id % STATUS_OPTIONS.length],
-            joinDate: new Date(Date.now() - Math.floor(Math.random() * 365) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+            status: user.status || STATUS_OPTIONS[user.id % STATUS_OPTIONS.length]
         }));
     }, [users]);
 
@@ -123,7 +122,10 @@ const Reporting = () => {
         try {
             const userToUpdate = users.find(user => user.id === userId);
             if (userToUpdate) {
-                await updateUser(userId, { ...userToUpdate, status: newStatus });
+                await updateUser(userId, {
+                    ...userToUpdate,
+                    status: newStatus
+                });
             }
         } catch (err) {
             console.error('Error updating user status:', err);
@@ -148,11 +150,6 @@ const Reporting = () => {
                 return matchesSearch && matchesStatus && matchesCompany;
             })
             .sort((a, b) => {
-                if (orderBy === 'joinDate') {
-                    return order === 'asc'
-                        ? new Date(a.joinDate) - new Date(b.joinDate)
-                        : new Date(b.joinDate) - new Date(a.joinDate);
-                }
                 return order === 'asc'
                     ? a[orderBy] > b[orderBy] ? 1 : -1
                     : a[orderBy] < b[orderBy] ? 1 : -1;
@@ -211,7 +208,7 @@ const Reporting = () => {
             >
                 <Box display="flex" alignItems="center" gap={2}>
                     <Tooltip title="Go back">
-                        <IconButton onClick={() => navigate(-1)}>
+                        <IconButton onClick={() => navigate('/dashboard')}>
                             <ArrowBackIcon />
                         </IconButton>
                     </Tooltip>
@@ -316,15 +313,6 @@ const Reporting = () => {
                                         Status
                                     </TableSortLabel>
                                 </TableCell>
-                                <TableCell>
-                                    <TableSortLabel
-                                        active={orderBy === 'joinDate'}
-                                        direction={orderBy === 'joinDate' ? order : 'desc'}
-                                        onClick={() => handleSort('joinDate')}
-                                    >
-                                        Join Date
-                                    </TableSortLabel>
-                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -411,12 +399,11 @@ const Reporting = () => {
                                                 />
                                             )}
                                         </TableCell>
-                                        <TableCell>{user.joinDate}</TableCell>
                                     </TableRow>
                                 ))
                             ) : (
                                 <TableRow>
-                                    <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
+                                    <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
                                         No users found
                                     </TableCell>
                                 </TableRow>

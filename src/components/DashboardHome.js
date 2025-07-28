@@ -140,8 +140,8 @@ const DashboardHome = () => {
         return (
             <Box sx={{ p: 3 }}>
                 <Alert severity="error">{error}</Alert>
-                <Button 
-                    variant="outlined" 
+                <Button
+                    variant="outlined"
                     onClick={refreshUsers}
                     sx={{ mt: 2 }}
                 >
@@ -254,8 +254,8 @@ const DashboardHome = () => {
                                                 <Typography variant="subtitle1">
                                                     {user.name}
                                                 </Typography>
-                                                <Typography 
-                                                    variant="body2" 
+                                                <Typography
+                                                    variant="body2"
                                                     sx={{ ml: 1, color: 'text.secondary' }}
                                                 >
                                                     @{user.username}
@@ -268,18 +268,18 @@ const DashboardHome = () => {
                                                     {user.email} • {user.phone}
                                                 </Typography>
                                                 <Box sx={{ mt: 0.5 }}>
-                                                    <Chip 
-                                                        size="small" 
-                                                        icon={<BusinessIcon />} 
-                                                        label={user.company?.name} 
-                                                        variant="outlined" 
+                                                    <Chip
+                                                        size="small"
+                                                        icon={<BusinessIcon />}
+                                                        label={user.company?.name}
+                                                        variant="outlined"
                                                         sx={{ mr: 1 }}
                                                     />
-                                                    <Chip 
-                                                        size="small" 
-                                                        icon={<PublicIcon />} 
-                                                        label={user.address?.city || 'N/A'} 
-                                                        variant="outlined" 
+                                                    <Chip
+                                                        size="small"
+                                                        icon={<PublicIcon />}
+                                                        label={user.address?.city || 'N/A'}
+                                                        variant="outlined"
                                                     />
                                                 </Box>
                                             </Box>
@@ -315,13 +315,13 @@ const DashboardHome = () => {
                             <Card variant="outlined" sx={{ height: '100%' }}>
                                 <CardContent>
                                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <Typography variant="subtitle1" component="div">
+                                        <Typography variant="subtitle1" component="div" sx={{ mr: 2 }}>
                                             {company}
                                         </Typography>
-                                        <Chip 
-                                            label={`${count} users`} 
-                                            color="primary" 
-                                            size="small" 
+                                        <Chip
+                                            label={`${count} users`}
+                                            color="primary"
+                                            size="small"
                                         />
                                     </Box>
                                 </CardContent>

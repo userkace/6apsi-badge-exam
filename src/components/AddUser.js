@@ -185,7 +185,7 @@ const AddUser = ({ editMode: editModeProp = false }) => {
         <Box sx={{ flexGrow: 1, p: 3 }}>
             <Button
                 startIcon={<ArrowBackIcon />}
-                onClick={() => navigate('/dashboard/edit')}
+                onClick={() => navigate('/dashboard/reports')}
                 sx={{ mb: 3 }}
                 variant="outlined"
             >
