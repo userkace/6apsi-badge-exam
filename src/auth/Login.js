@@ -22,11 +22,17 @@ const Login = () => {
     })
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
+    const [errors, setErrors] = useState({})
     const navigate = useNavigate()
     const location = useLocation()
     const { login } = useAuth()
 
     const from = location.state?.from?.pathname || '/dashboard'
+
+    const validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        return emailRegex.test(email)
+    }
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -34,6 +40,25 @@ const Login = () => {
             ...prev,
             [name]: value,
         }))
+
+        // Clear specific field errors when user starts typing
+        if (errors[name]) {
+            setErrors((prev) => ({
+                ...prev,
+                [name]: '',
+            }))
+        }
+    }
+
+    const handleBlur = (e) => {
+        const { name, value } = e.target
+
+        if (name === 'email' && value && !validateEmail(value)) {
+            setErrors((prev) => ({
+                ...prev,
+                email: 'Please enter a valid email address',
+            }))
+        }
     }
 
     const handleSubmit = async (e) => {
@@ -41,12 +66,24 @@ const Login = () => {
         setError('')
         setLoading(true)
 
-        try {
-            // Basic validation
-            if (!formData.email || !formData.password) {
-                throw new Error('Please fill in all fields')
-            }
+        // Validate form
+        const formErrors = {}
+        if (!formData.email) {
+            formErrors.email = 'Email is required'
+        } else if (!validateEmail(formData.email)) {
+            formErrors.email = 'Please enter a valid email address'
+        }
+        if (!formData.password) {
+            formErrors.password = 'Password is required'
+        }
 
+        if (Object.keys(formErrors).length > 0) {
+            setErrors(formErrors)
+            setLoading(false)
+            return
+        }
+
+        try {
             // In a real app, you would make an API call to your backend here
             // For demo purposes, we'll simulate an API call
             const response = await new Promise((resolve) => {
@@ -114,6 +151,9 @@ const Login = () => {
                         autoFocus
                         value={formData.email}
                         onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={!!errors.email}
+                        helperText={errors.email}
                         disabled={loading}
                     />
                     <TextField
