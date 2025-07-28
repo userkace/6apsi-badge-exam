@@ -10,11 +10,9 @@ const Logout = () => {
         const performLogout = async () => {
             try {
                 await logout()
-                // Redirect to home page after successful logout
                 navigate('/', { replace: true })
             } catch (error) {
                 console.error('Error during logout:', error)
-                // Still redirect to home even if there was an error
                 navigate('/', { replace: true })
             }
         }
