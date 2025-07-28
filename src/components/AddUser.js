@@ -160,7 +160,7 @@ const AddUser = ({ editMode: editModeProp = false }) => {
                 await updateUser(parseInt(id), formData)
                 navigate('/dashboard')
             } else {
-                const newUser = await addUser(formData)
+                await addUser(formData)
                 navigate('/dashboard')
             }
         } catch (error) {

@@ -24,7 +24,6 @@ import {
     Edit as EditIcon,
     Logout as LogoutIcon,
     Assessment as ReportIcon,
-    Email,
 } from '@mui/icons-material'
 import { useAuth } from '../context/AuthContext'
 

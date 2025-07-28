@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useContext } from 'react';
+import { useState, useMemo } from 'react';
 import {
     Box,
     Paper,
@@ -28,15 +28,13 @@ import {
     Search as SearchIcon,
     Refresh as RefreshIcon,
     ArrowBack as ArrowBackIcon,
-    Person as PersonIcon,
     Email as EmailIcon,
     Phone as PhoneIcon,
-    Language as LanguageIcon,
     Business as CompanyIcon,
     LocationOn as AddressIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { UsersProvider, useUsers } from '../context/UsersContext';
+import { useUsers } from '../context/UsersContext';
 
 // Constants
 const STATUS_OPTIONS = [
