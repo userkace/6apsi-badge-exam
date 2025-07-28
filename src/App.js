@@ -21,6 +21,7 @@ import DashboardHome from './components/DashboardHome'
 import AddUser from './components/AddUser'
 import EditUsers from './components/EditUsers'
 import About from './pages/About'
+import Reporting from './pages/Reporting'
 import PageTransition from './components/PageTransition'
 
 // Create a theme instance
@@ -172,6 +173,14 @@ const AnimatedRoutes = () => {
                         element={
                             <PageTransition>
                                 <AddUser editMode />
+                            </PageTransition>
+                        }
+                    />
+                    <Route
+                        path="reports"
+                        element={
+                            <PageTransition>
+                                <Reporting />
                             </PageTransition>
                         }
                     />

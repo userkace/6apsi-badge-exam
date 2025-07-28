@@ -23,6 +23,7 @@ import {
     Add as AddIcon,
     Edit as EditIcon,
     Logout as LogoutIcon,
+    Assessment as ReportIcon,
 } from '@mui/icons-material'
 import { useAuth } from '../context/AuthContext'
 
@@ -43,6 +44,7 @@ const Dashboard = () => {
         { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
         { text: 'Add User', icon: <AddIcon />, path: '/dashboard/add' },
         { text: 'Manage Users', icon: <EditIcon />, path: '/dashboard/edit' },
+        { text: 'Reports', icon: <ReportIcon />, path: '/dashboard/reports' },
     ]
 
     const handleLogout = async () => {

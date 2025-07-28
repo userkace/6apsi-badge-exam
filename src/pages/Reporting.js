@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useEffect, useMemo } from 'react';
 import {
     Box,
     Paper,
@@ -18,14 +18,18 @@ import {
     Select,
     MenuItem,
     Button,
-} from '@mui/material'
+    CircularProgress,
+    Alert,
+    IconButton,
+    Tooltip
+} from '@mui/material';
 import {
     Search as SearchIcon,
     Refresh as RefreshIcon,
     ArrowBack as ArrowBackIcon,
-} from '@mui/icons-material'
-import { useRecords } from '../context/RecordsContext'
-import { useNavigate } from 'react-router-dom'
+} from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 // Constants
 const STATUS_OPTIONS = [
@@ -34,7 +38,7 @@ const STATUS_OPTIONS = [
     'Completed',
     'Cancelled',
     'On Hold',
-]
+];
 
 const statusColors = {
     Active: 'success',
@@ -42,131 +46,161 @@ const statusColors = {
     Completed: 'primary',
     Cancelled: 'error',
     'On Hold': 'info',
-}
+};
 
 const Reporting = () => {
-    const navigate = useNavigate()
-    const { records } = useRecords()
-    const [page, setPage] = useState(0)
-    const [rowsPerPage, setRowsPerPage] = useState(10)
-    const [searchTerm, setSearchTerm] = useState('')
-    const [statusFilter, setStatusFilter] = useState('all')
-    const [categoryFilter, setCategoryFilter] = useState('all')
-    const [sortConfig, setSortConfig] = useState({
-        key: 'createdAt',
-        direction: 'desc',
-    })
+    const navigate = useNavigate();
+    const [records, setRecords] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [statusFilter, setStatusFilter] = useState('all');
+    const [orderBy, setOrderBy] = useState('id');
+    const [order, setOrder] = useState('asc');
 
-    // Get unique categories from records
-    const categories = useMemo(() => {
-        const uniqueCategories = new Set()
-        records.forEach((record) => {
-            if (record.category) {
-                uniqueCategories.add(record.category)
+    // Fetch records from API
+    const fetchRecords = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            // Check if we have cached records in localStorage first
+            const cachedRecords = localStorage.getItem('reportingRecords');
+
+            if (cachedRecords) {
+                setRecords(JSON.parse(cachedRecords));
+                setLoading(false);
+                return;
             }
-        })
-        return Array.from(uniqueCategories)
-    }, [records])
 
-    // Process and filter data
-    const processedData = useMemo(() => {
-        let result = [...records]
+            // Fetch from API if not in cache
+            const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
 
-        // Apply search
-        if (searchTerm) {
-            const term = searchTerm.toLowerCase()
-            result = result.filter(
-                (item) =>
-                    (item.name && item.name.toLowerCase().includes(term)) ||
-                    (item.category &&
-                        item.category.toLowerCase().includes(term)) ||
-                    (item.status && item.status.toLowerCase().includes(term)) ||
-                    (item.description &&
-                        item.description.toLowerCase().includes(term))
-            )
+            // Transform the data to match our reporting structure
+            const formattedRecords = response.data.map((post, index) => ({
+                id: post.id,
+                title: post.title,
+                description: post.body,
+                status: STATUS_OPTIONS[Math.floor(Math.random() * STATUS_OPTIONS.length)],
+                date: new Date(Date.now() - Math.floor(Math.random() * 30) * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                priority: ['Low', 'Medium', 'High'][Math.floor(Math.random() * 3)],
+            }));
+
+            // Cache the results
+            localStorage.setItem('reportingRecords', JSON.stringify(formattedRecords));
+            setRecords(formattedRecords);
+        } catch (err) {
+            console.error('Error fetching records:', err);
+            setError('Failed to load records. Please try again later.');
+        } finally {
+            setLoading(false);
         }
+    };
 
-        // Apply status filter
-        if (statusFilter !== 'all') {
-            result = result.filter((item) => item.status === statusFilter)
-        }
-
-        // Apply category filter
-        if (categoryFilter !== 'all') {
-            result = result.filter((item) => item.category === categoryFilter)
-        }
-
-        // Apply sorting
-        if (sortConfig.key) {
-            result.sort((a, b) => {
-                const aValue = a[sortConfig.key] || ''
-                const bValue = b[sortConfig.key] || ''
-
-                if (aValue < bValue) {
-                    return sortConfig.direction === 'asc' ? -1 : 1
-                }
-                if (aValue > bValue) {
-                    return sortConfig.direction === 'asc' ? 1 : -1
-                }
-                return 0
-            })
-        }
-
-        return result
-    }, [records, searchTerm, statusFilter, categoryFilter, sortConfig])
-
-    // Handle sort request
-    const handleSort = (key) => {
-        setSortConfig((prev) => ({
-            key,
-            direction:
-                prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc',
-        }))
-    }
-
-    // Handle page change
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage)
-    }
-
-    // Handle rows per page change
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10))
-        setPage(0)
-    }
+    // Initial data fetch
+    useEffect(() => {
+        fetchRecords();
+    }, []);
 
     // Handle refresh
     const handleRefresh = () => {
-        setSearchTerm('')
-        setStatusFilter('all')
-        setCategoryFilter('all')
-        setSortConfig({ key: 'createdAt', direction: 'desc' })
+        // Clear cache and refetch
+        localStorage.removeItem('reportingRecords');
+        fetchRecords();
+    };
+
+    // Handle sort
+    const handleSort = (property) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
+    };
+
+    // Filter and sort records
+    const filteredAndSortedRecords = useMemo(() => {
+        return records
+            .filter(record => {
+                const matchesSearch = searchTerm === '' ||
+                    record.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    record.description.toLowerCase().includes(searchTerm.toLowerCase());
+                const matchesStatus = statusFilter === 'all' || record.status === statusFilter;
+                return matchesSearch && matchesStatus;
+            })
+            .sort((a, b) => {
+                if (orderBy === 'date') {
+                    return order === 'asc'
+                        ? new Date(a.date) - new Date(b.date)
+                        : new Date(b.date) - new Date(a.date);
+                }
+                return order === 'asc'
+                    ? a[orderBy] > b[orderBy] ? 1 : -1
+                    : a[orderBy] < b[orderBy] ? 1 : -1;
+            });
+    }, [records, searchTerm, statusFilter, orderBy, order]);
+
+    // Handle pagination
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+
+    // Pagination
+    const paginatedRecords = filteredAndSortedRecords.slice(
+        page * rowsPerPage,
+        page * rowsPerPage + rowsPerPage
+    );
+
+    if (loading) {
+        return (
+            <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
+                <CircularProgress />
+            </Box>
+        );
+    }
+
+    if (error) {
+        return (
+            <Box p={3}>
+                <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={fetchRecords}
+                    startIcon={<RefreshIcon />}
+                >
+                    Retry
+                </Button>
+            </Box>
+        );
     }
 
     return (
-        <Box sx={{ width: '100%' }}>
-          <Button
-                              startIcon={<ArrowBackIcon />}
-                              onClick={() => navigate('/dashboard')}
-                              sx={{ mb: 3 }}
-                              variant="outlined"
-                          >
-                              Back to Dashboard
-                          </Button>
+        <Box p={3}>
             <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    mb: 3,
-                    flexWrap: 'wrap',
-                    gap: 2,
-                }}
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                mb={3}
+                flexWrap="wrap"
+                gap={2}
             >
-                <Typography variant="h5" component="h1">
-                    Records Report
-                </Typography>
+                <Box display="flex" alignItems="center" gap={2}>
+                    <Tooltip title="Go back">
+                        <IconButton onClick={() => navigate(-1)}>
+                            <ArrowBackIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <Typography variant="h5" component="h1">
+                        Records Report
+                    </Typography>
+                </Box>
 
-                <Box display="flex" gap={2} mb={2} flexWrap="wrap">
+                <Box display="flex" gap={2} flexWrap="wrap">
                     <TextField
                         size="small"
                         placeholder="Search records..."
@@ -194,45 +228,27 @@ const Reporting = () => {
                             ))}
                         </Select>
                     </FormControl>
-                    <FormControl size="small" sx={{ minWidth: 150 }}>
-                        <InputLabel>Category</InputLabel>
-                        <Select
-                            value={categoryFilter}
-                            label="Category"
-                            onChange={(e) => setCategoryFilter(e.target.value)}
+                    <Tooltip title="Refresh data">
+                        <Button
+                            variant="outlined"
+                            onClick={handleRefresh}
+                            startIcon={<RefreshIcon />}
                         >
-                            <MenuItem value="all">All Categories</MenuItem>
-                            {categories.map((category) => (
-                                <MenuItem key={category} value={category}>
-                                    {category}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                    <Button
-                        variant="outlined"
-                        startIcon={<RefreshIcon />}
-                        onClick={handleRefresh}
-                        sx={{ ml: 'auto' }}
-                    >
-                        Reset Filters
-                    </Button>
+                            Refresh
+                        </Button>
+                    </Tooltip>
                 </Box>
             </Box>
 
-            <Paper sx={{ width: '100%', overflow: 'hidden', mb: 2 }}>
-                <TableContainer sx={{ maxHeight: 'calc(100vh - 300px)' }}>
-                    <Table stickyHeader aria-label="reporting table">
+            <Paper elevation={3} sx={{ overflow: 'hidden', mb: 3 }}>
+                <TableContainer>
+                    <Table>
                         <TableHead>
                             <TableRow>
                                 <TableCell>
                                     <TableSortLabel
-                                        active={sortConfig.key === 'id'}
-                                        direction={
-                                            sortConfig.key === 'id'
-                                                ? sortConfig.direction
-                                                : 'asc'
-                                        }
+                                        active={orderBy === 'id'}
+                                        direction={orderBy === 'id' ? order : 'asc'}
                                         onClick={() => handleSort('id')}
                                     >
                                         ID
@@ -240,38 +256,18 @@ const Reporting = () => {
                                 </TableCell>
                                 <TableCell>
                                     <TableSortLabel
-                                        active={sortConfig.key === 'name'}
-                                        direction={
-                                            sortConfig.key === 'name'
-                                                ? sortConfig.direction
-                                                : 'asc'
-                                        }
-                                        onClick={() => handleSort('name')}
+                                        active={orderBy === 'title'}
+                                        direction={orderBy === 'title' ? order : 'asc'}
+                                        onClick={() => handleSort('title')}
                                     >
-                                        Name
+                                        Title
                                     </TableSortLabel>
                                 </TableCell>
+                                <TableCell>Description</TableCell>
                                 <TableCell>
                                     <TableSortLabel
-                                        active={sortConfig.key === 'category'}
-                                        direction={
-                                            sortConfig.key === 'category'
-                                                ? sortConfig.direction
-                                                : 'asc'
-                                        }
-                                        onClick={() => handleSort('category')}
-                                    >
-                                        Category
-                                    </TableSortLabel>
-                                </TableCell>
-                                <TableCell>
-                                    <TableSortLabel
-                                        active={sortConfig.key === 'status'}
-                                        direction={
-                                            sortConfig.key === 'status'
-                                                ? sortConfig.direction
-                                                : 'asc'
-                                        }
+                                        active={orderBy === 'status'}
+                                        direction={orderBy === 'status' ? order : 'asc'}
                                         onClick={() => handleSort('status')}
                                     >
                                         Status
@@ -279,78 +275,41 @@ const Reporting = () => {
                                 </TableCell>
                                 <TableCell>
                                     <TableSortLabel
-                                        active={sortConfig.key === 'createdAt'}
-                                        direction={
-                                            sortConfig.key === 'createdAt'
-                                                ? sortConfig.direction
-                                                : 'desc'
-                                        }
-                                        onClick={() => handleSort('createdAt')}
+                                        active={orderBy === 'date'}
+                                        direction={orderBy === 'date' ? order : 'asc'}
+                                        onClick={() => handleSort('date')}
                                     >
-                                        Date Added
+                                        Date
                                     </TableSortLabel>
                                 </TableCell>
-                                <TableCell align="right">
-                                    <TableSortLabel
-                                        active={sortConfig.key === 'value'}
-                                        direction={
-                                            sortConfig.key === 'value'
-                                                ? sortConfig.direction
-                                                : 'asc'
-                                        }
-                                        onClick={() => handleSort('value')}
-                                    >
-                                        Value
-                                    </TableSortLabel>
-                                </TableCell>
+                                <TableCell>Priority</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {processedData.length > 0 ? (
-                                processedData
-                                    .slice(
-                                        page * rowsPerPage,
-                                        page * rowsPerPage + rowsPerPage
-                                    )
-                                    .map((row) => (
-                                        <TableRow hover key={row.id}>
-                                            <TableCell>{row.id}</TableCell>
-                                            <TableCell>{row.name}</TableCell>
-                                            <TableCell>
-                                                {row.category}
-                                            </TableCell>
-                                            <TableCell>
-                                                <Chip
-                                                    label={row.status || 'N/A'}
-                                                    color={
-                                                        statusColors[
-                                                            row.status
-                                                        ] || 'default'
-                                                    }
-                                                    size="small"
-                                                />
-                                            </TableCell>
-                                            <TableCell>
-                                                {row.createdAt
-                                                    ? new Date(
-                                                          row.createdAt
-                                                      ).toLocaleDateString()
-                                                    : 'N/A'}
-                                            </TableCell>
-                                            <TableCell align="right">
-                                                {typeof row.value === 'number'
-                                                    ? `$${row.value.toFixed(2)}`
-                                                    : row.value || 'N/A'}
-                                            </TableCell>
-                                        </TableRow>
-                                    ))
+                            {paginatedRecords.length > 0 ? (
+                                paginatedRecords.map((record) => (
+                                    <TableRow key={record.id} hover>
+                                        <TableCell>{record.id}</TableCell>
+                                        <TableCell sx={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                            {record.title}
+                                        </TableCell>
+                                        <TableCell sx={{ maxWidth: 300, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                            {record.description}
+                                        </TableCell>
+                                        <TableCell>
+                                            <Chip
+                                                label={record.status}
+                                                color={statusColors[record.status] || 'default'}
+                                                size="small"
+                                            />
+                                        </TableCell>
+                                        <TableCell>{record.date}</TableCell>
+                                        <TableCell>{record.priority}</TableCell>
+                                    </TableRow>
+                                ))
                             ) : (
                                 <TableRow>
-                                    <TableCell
-                                        colSpan={6}
-                                        align="center"
-                                        sx={{ py: 4 }}
-                                    >
+                                    <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
                                         No records found
                                     </TableCell>
                                 </TableRow>
@@ -358,11 +317,10 @@ const Reporting = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={processedData.length}
+                    count={filteredAndSortedRecords.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
@@ -370,7 +328,7 @@ const Reporting = () => {
                 />
             </Paper>
         </Box>
-    )
-}
+    );
+};
 
-export default Reporting
+export default Reporting;
