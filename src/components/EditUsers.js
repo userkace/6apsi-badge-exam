@@ -36,7 +36,7 @@ const EditUsers = () => {
     const { users, deleteUser, loading, error, refreshUsers } = useUsers()
     const [searchTerm, setSearchTerm] = useState('')
     const [page, setPage] = useState(0)
-    const [rowsPerPage, setRowsPerPage] = useState(5)
+    const [rowsPerPage, setRowsPerPage] = useState(10)
     const navigate = useNavigate()
 
     const handleSearch = (e) => {
