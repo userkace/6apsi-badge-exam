@@ -75,8 +75,20 @@ const Reporting = () => {
     // Get unique companies for the filter
     const companyOptions = useMemo(() => {
         if (!users) return [];
-        const companies = new Set(users.map(user => user.company?.name).filter(Boolean));
-        return Array.from(companies).sort();
+        const companyMap = new Map();
+        users.forEach(user => {
+            if (user.company?.name) {
+                const lowerCaseName = user.company.name.toLowerCase();
+                // Store the original case version for display
+                if (!companyMap.has(lowerCaseName)) {
+                    companyMap.set(lowerCaseName, user.company.name);
+                }
+            }
+        });
+        // Return the original case versions, but deduplicated case-insensitively
+        return Array.from(companyMap.values()).sort((a, b) => 
+            a.localeCompare(b, undefined, {sensitivity: 'base'})
+        );
     }, [users]);
 
     // Process users data for reporting
@@ -146,7 +158,8 @@ const Reporting = () => {
                         String(value).toLowerCase().includes(searchTerm.toLowerCase())
                     );
                 const matchesStatus = statusFilter === 'all' || user.status === statusFilter;
-                const matchesCompany = companyFilter === 'all' || user.company === companyFilter;
+                const matchesCompany = companyFilter === 'all' || 
+                    (user.company && user.company.toLowerCase() === companyFilter.toLowerCase());
                 return matchesSearch && matchesStatus && matchesCompany;
             })
             .sort((a, b) => {
