@@ -9,10 +9,12 @@ import { ThemeProvider, createTheme } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { AnimatePresence } from 'framer-motion'
 import { UsersProvider } from './context/UsersContext'
+import { AuthProvider, useAuth } from './context/AuthContext'
 
 // Import components
 import Landing from './pages/Landing'
 import Login from './auth/Login'
+import Logout from './auth/Logout'
 import Signup from './auth/Signup'
 import Dashboard from './pages/Dashboard'
 import DashboardHome from './components/DashboardHome'
@@ -50,8 +52,33 @@ const theme = createTheme({
 
 // A wrapper for protected routes
 const ProtectedRoute = ({ children }) => {
-    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true'
-    return isAuthenticated ? children : <Navigate to="/login" replace />
+    const { isAuthenticated, loading } = useAuth()
+    const location = useLocation()
+
+    if (loading) {
+        return <div>Loading...</div> // Or a nice loading spinner
+    }
+
+    if (!isAuthenticated) {
+        // Redirect them to the /login page, but save the current location they were trying to go to
+        return <Navigate to="/login" state={{ from: location }} replace />
+    }
+
+    return children
+}
+
+// Wrapper for public-only routes (like login/signup when already authenticated)
+const PublicRoute = ({ children }) => {
+    const { isAuthenticated } = useAuth()
+    const location = useLocation()
+
+    if (isAuthenticated) {
+        // If user is already authenticated, redirect them to the dashboard or their intended destination
+        const from = location.state?.from?.pathname || '/dashboard'
+        return <Navigate to={from} replace />
+    }
+
+    return children
 }
 
 // Wrapper component to enable page transitions
@@ -81,16 +108,28 @@ const AnimatedRoutes = () => {
                 <Route
                     path="/login"
                     element={
-                        <PageTransition>
-                            <Login />
-                        </PageTransition>
+                        <PublicRoute>
+                            <PageTransition>
+                                <Login />
+                            </PageTransition>
+                        </PublicRoute>
                     }
                 />
                 <Route
                     path="/signup"
                     element={
+                        <PublicRoute>
+                            <PageTransition>
+                                <Signup />
+                            </PageTransition>
+                        </PublicRoute>
+                    }
+                />
+                <Route
+                    path="/logout"
+                    element={
                         <PageTransition>
-                            <Signup />
+                            <Logout />
                         </PageTransition>
                     }
                 />
@@ -149,11 +188,13 @@ function App() {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <UsersProvider>
-                <Router>
-                    <AnimatedRoutes />
-                </Router>
-            </UsersProvider>
+            <AuthProvider>
+                <UsersProvider>
+                    <Router>
+                        <AnimatedRoutes />
+                    </Router>
+                </UsersProvider>
+            </AuthProvider>
         </ThemeProvider>
     )
 }

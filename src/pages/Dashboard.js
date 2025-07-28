@@ -22,9 +22,9 @@ import {
     Dashboard as DashboardIcon,
     Add as AddIcon,
     Edit as EditIcon,
-    List as ListIcon,
     Logout as LogoutIcon,
 } from '@mui/icons-material'
+import { useAuth } from '../context/AuthContext'
 
 const drawerWidth = 240
 
@@ -33,6 +33,7 @@ const Dashboard = () => {
     const navigate = useNavigate()
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+    const { logout } = useAuth()
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen)
@@ -44,9 +45,16 @@ const Dashboard = () => {
         { text: 'Manage Users', icon: <EditIcon />, path: '/dashboard/edit' },
     ]
 
-    const handleLogout = () => {
-        // TODO: Implement logout logic
-        navigate('/login')
+    const handleLogout = async () => {
+        try {
+            await logout()
+            // The Logout component will handle the redirection
+            navigate('/logout')
+        } catch (error) {
+            console.error('Failed to log out:', error)
+            // If there's an error, still try to redirect to home
+            navigate('/')
+        }
     }
 
     const drawer = (

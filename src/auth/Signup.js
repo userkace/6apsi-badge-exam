@@ -36,7 +36,7 @@ const Signup = () => {
 
     const validatePassword = (password) => {
         const validationErrors = []
-        
+
         if (password.length < passwordValidation.minLength) {
             validationErrors.push(`Password must be at least ${passwordValidation.minLength} characters long`)
         }
@@ -52,7 +52,7 @@ const Signup = () => {
         if (!passwordValidation.hasSpecialChar.test(password)) {
             validationErrors.push('Password must contain at least one special character')
         }
-        
+
         return validationErrors
     }
 
@@ -150,7 +150,7 @@ const Signup = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        
+
         const newErrors = {}
 
         // Validate all fields
@@ -194,10 +194,10 @@ const Signup = () => {
 
     const getPasswordStrength = () => {
         if (!formData.password) return ''
-        
+
         const passwordErrors = validatePassword(formData.password)
         const strength = 5 - passwordErrors.length
-        
+
         if (strength <= 2) return 'Weak'
         if (strength <= 3) return 'Medium'
         if (strength <= 4) return 'Strong'
@@ -298,7 +298,7 @@ const Signup = () => {
                         error={!!errors.confirmPassword}
                         helperText={errors.confirmPassword}
                     />
-                    
+
                     <Button
                         type="submit"
                         fullWidth
@@ -310,7 +310,7 @@ const Signup = () => {
                     <Grid container spacing={1}>
                         <Grid item xs>
                             <Link component={RouterLink} to="/login" variant="body2">
-                                Already have an account? Sign in
+                                Already have an account?
                             </Link>
                         </Grid>
                         <Grid item>

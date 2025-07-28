@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate, Link as RouterLink } from 'react-router-dom'
+import { useNavigate, Link as RouterLink, useLocation } from 'react-router-dom'
 import {
     Avatar,
     Button,
@@ -10,8 +10,10 @@ import {
     Typography,
     Container,
     CssBaseline,
+    CircularProgress,
 } from '@mui/material'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+import { useAuth } from '../context/AuthContext'
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -19,7 +21,12 @@ const Login = () => {
         password: '',
     })
     const [error, setError] = useState('')
+    const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
+    const location = useLocation()
+    const { login } = useAuth()
+
+    const from = location.state?.from?.pathname || '/dashboard'
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -29,23 +36,48 @@ const Login = () => {
         }))
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         setError('')
+        setLoading(true)
 
-        // Basic validation
-        if (!formData.email || !formData.password) {
-            setError('Please fill in all fields')
-            return
+        try {
+            // Basic validation
+            if (!formData.email || !formData.password) {
+                throw new Error('Please fill in all fields')
+            }
+
+            // In a real app, you would make an API call to your backend here
+            // For demo purposes, we'll simulate an API call
+            const response = await new Promise((resolve) => {
+                setTimeout(() => {
+                    // This is just for demo - in a real app, verify credentials with your backend
+                    if (formData.email && formData.password) {
+                        resolve({
+                            token: 'demo-token-123',
+                            user: {
+                                id: '1',
+                                email: formData.email,
+                                name: formData.email.split('@')[0] // Just for demo
+                            }
+                        })
+                    } else {
+                        throw new Error('Invalid credentials')
+                    }
+                }, 1000)
+            })
+
+            // Save the token and user data
+            login(response.token, response.user)
+
+            // Redirect to the page they were trying to access, or to dashboard
+            navigate(from, { replace: true })
+        } catch (err) {
+            setError(err.message || 'Failed to log in')
+            console.error('Login error:', err)
+        } finally {
+            setLoading(false)
         }
-
-        // TODO: Replace with actual authentication logic
-        console.log('Login attempt with:', formData)
-
-        // For demo purposes, redirect to dashboard on any login attempt
-        // In a real app, you would validate credentials first
-        localStorage.setItem('isAuthenticated', 'true')
-        navigate('/dashboard')
     }
 
     return (
@@ -82,6 +114,7 @@ const Login = () => {
                         autoFocus
                         value={formData.email}
                         onChange={handleChange}
+                        disabled={loading}
                     />
                     <TextField
                         margin="normal"
@@ -94,13 +127,10 @@ const Login = () => {
                         autoComplete="current-password"
                         value={formData.password}
                         onChange={handleChange}
+                        disabled={loading}
                     />
                     {error && (
-                        <Typography
-                            color="error"
-                            variant="body2"
-                            sx={{ mt: 1 }}
-                        >
+                        <Typography color="error" variant="body2" sx={{ mt: 1 }}>
                             {error}
                         </Typography>
                     )}
@@ -109,18 +139,27 @@ const Login = () => {
                         fullWidth
                         variant="contained"
                         sx={{ mt: 3, mb: 2 }}
+                        disabled={loading}
                     >
-                        Sign In
+                        {loading ? <CircularProgress size={24} /> : 'Sign In'}
                     </Button>
                     <Grid container spacing={1}>
-                        <Grid item xs>
-                            <Link component={RouterLink} to="/signup" variant="body2">
-                                Don't have an account? Sign up
+                        <Grid item>
+                            <Link
+                                component={RouterLink}
+                                to="/signup"
+                                variant="body2"
+                            >
+                                {"Don't have an account?"}
                             </Link>
                         </Grid>
                         <Grid item>
-                            <Link component={RouterLink} to="/" variant="body2">
-                                Back to Home
+                        <Link
+                                component={RouterLink}
+                                to="/"
+                                variant="body2"
+                            >
+                                {"Back to Home"}
                             </Link>
                         </Grid>
                     </Grid>
